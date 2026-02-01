@@ -1,4 +1,12 @@
 // ───────── Format ───────── //
+const formatNumber = (val) => {
+  if (val == null || isNaN(val)) return "-";
+  return new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(val);
+};
+
 const formatUSD = (val) => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -272,15 +280,94 @@ const FORMATTERS = {
   "tf1d.changePercent": formatPercent,
 
   // Change $
+  "tf5m.changeDollar": formatUSD,
+  "tf15m.changeDollar": formatUSD,
+  "tf1h.changeDollar": formatUSD,
+  "tf4h.changeDollar": formatUSD,
+  "tf8h.changeDollar": formatUSD,
+  "tf12h.changeDollar": formatUSD,
+  "tf1d.changeDollar": formatUSD,
+
   // Volume
+  "tf5m.volume": formatUSDShort,
+  "tf15m.volume": formatUSDShort,
+  "tf1h.volume": formatUSDShort,
+  "tf4h.volume": formatUSDShort,
+  "tf8h.volume": formatUSDShort,
+  "tf12h.volume": formatUSDShort,
+  "tf1d.volume": formatUSDShort,
+
   // Trades
+  "tf5m.trades": formatNumber,
+  "tf15m.trades": formatNumber,
+  "tf1h.trades": formatNumber,
+  "tf4h.trades": formatNumber,
+  "tf8h.trades": formatNumber,
+  "tf12h.trades": formatNumber,
+  "tf1d.trades": formatNumber,
+
   // Volatility
-  // Open Interest Changes %
-  // Open Interest Changes $
+  "tf5m.volatility": formatPercent,
+  "tf15m.volatility": formatPercent,
+  "tf1h.volatility": formatPercent,
+  "tf4h.volatility": formatPercent,
+  "tf8h.volatility": formatPercent,
+  "tf12h.volatility": formatPercent,
+  "tf1d.volatility": formatPercent,
+
+  // OI CHG %
+  "tf5m.oiChange": formatPercent,
+  "tf15m.oiChange": formatPercent,
+  "tf1h.oiChange": formatPercent,
+  "tf4h.oiChange": formatPercent,
+  "tf8h.oiChange": formatPercent,
+  "tf12h.oiChange": formatPercent,
+  "tf1d.oiChange": formatPercent,
+
+  // OI CHG $
+  "tf5m.oiChangeDollar": formatUSDShort,
+  "tf15m.oiChangeDollar": formatUSDShort,
+  "tf1h.oiChangeDollar": formatUSDShort,
+  "tf4h.oiChangeDollar": formatUSDShort,
+  "tf8h.oiChangeDollar": formatUSDShort,
+  "tf12h.oiChangeDollar": formatUSDShort,
+  "tf1d.oiChangeDollar": formatUSDShort,
+
   // CVD
-  // Voume Changes %
-  // Voume Changes $
-  // Btc Corr
+  "tf5m.vdelta": formatUSDShort,
+  "tf15m.vdelta": formatUSDShort,
+  "tf1h.vdelta": formatUSDShort,
+  "tf4h.vdelta": formatUSDShort,
+  "tf8h.vdelta": formatUSDShort,
+  "tf12h.vdelta": formatUSDShort,
+  "tf1d.vdelta": formatUSDShort,
+
+  // VOL CHG
+  "tf5m.volumeChange": formatPercent,
+  "tf15m.volumeChange": formatPercent,
+  "tf1h.volumeChange": formatPercent,
+  "tf4h.volumeChange": formatPercent,
+  "tf8h.volumeChange": formatPercent,
+  "tf12h.volumeChange": formatPercent,
+  "tf1d.volumeChange": formatPercent,
+
+  // VOL CHG $
+  "tf5m.volumeChangeDollar": formatUSDShort,
+  "tf15m.volumeChangeDollar": formatUSDShort,
+  "tf1h.volumeChangeDollar": formatUSDShort,
+  "tf4h.volumeChangeDollar": formatUSDShort,
+  "tf8h.volumeChangeDollar": formatUSDShort,
+  "tf12h.volumeChangeDollar": formatUSDShort,
+  "tf1d.volumeChangeDollar": formatUSDShort,
+
+  // BTC Corr
+  "tf5m.btcCorrelation": formatNumber,
+  "tf15m.btcCorrelation":formatNumber,
+  "tf1h.btcCorrelation": formatNumber,
+  "tf4h.btcCorrelation": formatNumber,
+  "tf8h.btcCorrelation": formatNumber,
+  "tf12h.btcCorrelation": formatNumber,
+  "tf1d.btcCorrelation": formatNumber,
 };
 
 let ICON_MAP = {};
@@ -350,6 +437,7 @@ function buildHeader() {
     label.textContent = FIELD_LABELS[field] || field;
     label.style.flexGrow = "1";
     label.style.textAlign = "center";
+    label.style.padding = "0 10px";
 
     // sort icon
     const filterIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -411,6 +499,15 @@ function getDeepValue(obj, path) {
   return path.split('.').reduce((acc, part) => acc && acc[part], obj);
 }
 
+function handleIconError(img, pair) {
+  const fallback = document.createElement("div");
+  fallback.className = "icon-pairs-retrun";
+  
+  fallback.innerHTML = `<span class="named-icon-pairs-retrun">${pair.charAt(0)}</span>`;
+  
+  img.replaceWith(fallback);
+}
+
 /* ───────── Body Data ───────── */
 function buildBody(tickers) {
   tbody.innerHTML = "";
@@ -421,12 +518,24 @@ function buildBody(tickers) {
     // COIN COLUMN
     const tdCoin = document.createElement("td");
     const pair = ticker.baseAsset;
+    const symbol = ticker.symbol;
     const icon = ICON_MAP[pair] || "";
+
+    let iconHtml = "";
+
+    if (icon) {
+      iconHtml = `<img class="icon-pairs" src="${icon}" onerror="handleIconError(this, '${pair}')" />`;
+    } else {
+      iconHtml = `
+        <div class="icon-pairs-retrun">
+          <span class="named-icon-pairs-retrun">${pair.charAt(0)}</span>
+        </div>`;
+    }
 
     tdCoin.innerHTML = `
       <div class="coin-cell">
-        ${icon ? `<img class="icon-pairs" src="${icon}" />` : ""}
-        <span>${pair}</span>
+        ${iconHtml}
+        <span>${symbol}</span>
       </div>
     `;
     tr.appendChild(tdCoin);
@@ -435,7 +544,6 @@ function buildBody(tickers) {
     getActiveFields().forEach(field => {
       const td = document.createElement("td");
       
-      // PERUBAHAN DI SINI:
       const raw = getDeepValue(ticker, field); 
       
       const formatter = FORMATTERS[field];
@@ -687,6 +795,97 @@ document.querySelectorAll("input[type='checkbox'][data-field]").forEach(cb => {
     buildBody(CURRENT_TICKERS);
     initDrag();
   });
+});
+
+// Hidden All & Show All
+document.querySelectorAll(".btn-column").forEach(btn => {
+  const wrapper = btn.closest(".wrapper-core, .wrapper-core"); 
+  const checkboxes = wrapper.querySelectorAll("input[type='checkbox'][data-field]");
+
+  btn.addEventListener("click", () => {
+    // cek apakah semua checkbox ON
+    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+    if (allChecked) {
+      // semua ON → turn OFF
+      checkboxes.forEach(cb => {
+        cb.checked = false;
+        COLUMN_CONFIG[cb.dataset.field] = false;
+      });
+      btn.classList.remove("hidden-all");
+    } else {
+      // ada OFF → turn ON semua
+      checkboxes.forEach(cb => {
+        cb.checked = true;
+        COLUMN_CONFIG[cb.dataset.field] = true;
+      });
+      btn.classList.add("hidden-all");
+    }
+
+    saveColumnConfig(COLUMN_CONFIG);
+
+    // rebuild table langsung
+    buildHeader();
+    buildBody(CURRENT_TICKERS);
+    initDrag();
+  });
+
+  // inisialisasi style sesuai state awal
+  const allCheckedInit = Array.from(checkboxes).every(cb => cb.checked);
+  if (allCheckedInit) btn.classList.add("hidden-all");
+});
+
+// Btn 
+const btnAll = document.getElementById("AllShow");
+const btnDefaults = document.getElementById("Defaults");
+const btnCoreOnly = document.getElementById("CoreOnly");
+
+const CORE_FIELDS = ["price", "openInterestUsd", "fundingRate", "mcap"];
+const DEFAULT_FIELDS = [
+  ...CORE_FIELDS,
+  "tf15m.volume",
+  "tf15m.oiChange"
+];
+
+function setFieldsActive(activeFields) {
+  document.querySelectorAll('input[type="checkbox"][data-field]').forEach(cb => {
+    const field = cb.dataset.field;
+    const isActive = activeFields.includes(field);
+    cb.checked = isActive;
+    COLUMN_CONFIG[field] = isActive;
+  });
+
+  saveColumnConfig(COLUMN_CONFIG);
+
+  // rebuild table langsung
+  buildHeader();
+  buildBody(CURRENT_TICKERS);
+  initDrag();
+
+  // update btn-column style per section
+  document.querySelectorAll(".wrapper-core, .wrapper-column").forEach(wrapper => {
+    const sectionCheckboxes = wrapper.querySelectorAll('input[type="checkbox"][data-field]');
+    const btn = wrapper.querySelector(".btn-column");
+    if (!btn) return;
+    const allChecked = Array.from(sectionCheckboxes).every(cb => cb.checked);
+    if (allChecked) btn.classList.add("hidden-all");
+    else btn.classList.remove("hidden-all");
+  });
+}
+
+// ALL
+btnAll.addEventListener("click", () => {
+  setFieldsActive(FIELDS);
+});
+
+// Defaults
+btnDefaults.addEventListener("click", () => {
+  setFieldsActive(DEFAULT_FIELDS);
+});
+
+// Core Only
+btnCoreOnly.addEventListener("click", () => {
+  setFieldsActive(CORE_FIELDS);
 });
 
 // ───────── Popup ───────── //

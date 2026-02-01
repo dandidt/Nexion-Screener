@@ -884,10 +884,31 @@ input[type="number"] {
   gap: 8px;
 }
 
+.coin-cell span {
+  font-size: var(--sz-14);
+  font-weight: var(--wg-500);
+}
+
 .icon-pairs {
   height: 25px;
   width: 25px;
   border-radius: 50%;
+}
+
+.icon-pairs-retrun  {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-35);
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+}
+
+.named-icon-pairs-retrun {
+  font-size: var(--sz-12);
+  font-weight: var(--wg-700);
+  color: var(--gray);
 }
 
 
@@ -1054,7 +1075,7 @@ input[type="number"] {
   font-weight: var(--wg-500);
 }
 
-.btn-column.all {
+.btn-column.hidden-all {
   color: var(--red);
 }
 
