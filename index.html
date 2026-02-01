@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexion Screener</title>
+    <link rel="stylesheet" href="Style/Style.css">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+    <div class="wrapper-logo">
+        <img src="Asset/Nexion.png">
+        <span class="title-logo">Nexion Screener</span>
+    </div>
+    <div class="wrapper-source-data">
+        <div class="btn-radio-wrapper">
+            <button class="btn-radio source-data active">
+                <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><path d="m16.624 13.92l2.717 2.716l-7.353 7.353l-7.352-7.352l2.717-2.717l4.636 4.66l4.635-4.66zm4.637-4.636L24 12l-2.715 2.716L18.568 12l2.693-2.716zm-9.272 0l2.716 2.692l-2.717 2.717L9.272 12l2.716-2.715zm-9.273 0L5.41 12l-2.692 2.692L0 12l2.716-2.716zM11.99.01l7.352 7.33l-2.717 2.715l-4.636-4.636l-4.635 4.66l-2.717-2.716L11.989.011z"/></svg>
+                <span>Binance</span>
+            </button>
+            <button class="btn-radio source-data">
+                <svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewBox="0 0 144 144"><path d="M144 71.6991C144 119.306 114.866 134.582 99.5156 120.98C86.8804 109.889 83.1211 86.4521 64.116 84.0456C39.9942 81.0113 37.9057 113.133 22.0334 113.133C3.5504 113.133 0 86.2428 0 72.4315C0 58.3063 3.96809 39.0542 19.736 39.0542C38.1146 39.0542 39.1588 66.5722 62.132 65.1073C85.0007 63.5379 85.4184 34.8689 100.247 22.6271C113.195 12.0593 144 23.4641 144 71.6991Z"/></svg>
+                <span>Hyperliquid</span>
+            </button>
+        </div>
+    </div>
+    </nav>
+
+    <!-- Main -->
+    <main class="main">
+        <div class="wrapper-header">
+            <div class="column-left">
+                <div class="box-search">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <path d="M21.71 20.29L18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a1 1 0 0 0 1.42 0a1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 7-7a7 7 0 0 1-7 7Z"/>
+                    </svg>
+                    <input type="text" placeholder="Search" />
+                    <span class="slash">/</span>
+                </div>
+            </div>
+            <div class="column-right">
+                <button class="btn btn-default btn-filter">
+                    High Volume
+                </button>
+                <button class="btn btn-default btn-filter">
+                    OI Spike
+                </button>
+                <button class="btn btn-default btn-filter">
+                    Big Movers
+                </button>
+                <button class="btn btn-default btn-filter">
+                    High Founding
+                </button>
+                <button class="btn btn-default btn-filter on-filter" id="BtnFilter">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="2 3 20 18" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
+                    <div class="tips-filter">
+                        <p>1</p>
+                    </div>
+                </button>
+                <button class="btn btn-default btn-filter" id="BtnColumn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="2 2 16 16" width="20" height="20" fill="currentColor"><path d="M3 3.5a.5.5 0 0 1 .5-.5H4a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-.5a.5.5 0 0 1 0-1H4a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-.5a.5.5 0 0 1-.5-.5ZM9 4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h.475a3.17 3.17 0 0 0-.043.155L9.22 17H9a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6.943l-1 1V5a1 1 0 0 0-1-1H9Zm6 1v4.943l-1 1V5a2 2 0 0 1 2-2h.5a.5.5 0 0 1 0 1H16a1 1 0 0 0-1 1Zm-4.02 10.377l4.83-4.83a1.87 1.87 0 1 1 2.644 2.646l-4.83 4.829a2.197 2.197 0 0 1-1.02.578l-1.498.374a.89.89 0 0 1-1.079-1.078l.375-1.498a2.18 2.18 0 0 1 .578-1.02Z"/></svg>
+                </button>
+            </div>
+        </div>
+        <div class="wrapper-table">
+            <table class="crypto-table">
+                <thead>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="wrapper-price">
+            <div class="row-price">
+            <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 32 32"><path d="M23.388 15.165c1.733-.886 2.836-2.462 2.58-5.081c-.335-3.585-3.279-4.786-7.178-5.121V0h-3.033v4.825c-.788 0-1.595.02-2.403.039V0h-3.033v4.963c-1.115.034-2.414.017-6.085 0v3.23c2.394-.042 3.651-.196 3.939 1.339v13.589c-.183 1.218-1.158 1.043-3.328 1.005l-.61 3.604c5.53 0 6.086.02 6.086.02V32h3.033v-4.191c.827.02 1.634.02 2.403.02v4.172h3.033v-4.25c5.081-.276 8.478-1.556 8.931-6.342c.354-3.84-1.457-5.554-4.333-6.243zM13.413 8.41c1.713 0 7.07-.532 7.07 3.033c0 3.407-5.357 3.013-7.07 3.013zm0 15.735v-6.657c2.048 0 8.32-.571 8.32 3.328c0 3.762-6.272 3.328-8.32 3.328z"/></svg>
+            <p class="price-realtime" id="RealtimeBitcoin">$0</p>
+            </div>
+            <div class="row-price">
+            <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><path d="M12 0L4.63 12.22L12 16.574l7.37-4.354zm0 24L4.63 13.617L12 18l7.37-4.383z"/></svg>
+            <p class="price-realtime" id="RealtimeEthereum">$0</p>
+            </div>
+            <div class="row-price">
+            <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 24 24"><path d="m23.876 18.031l-3.962 4.14a.92.92 0 0 1-.306.21a.94.94 0 0 1-.367.074H.46a.469.469 0 0 1-.252-.073a.451.451 0 0 1-.17-.196a.438.438 0 0 1-.031-.255a.444.444 0 0 1 .117-.23l3.965-4.139a.92.92 0 0 1 .305-.21a.94.94 0 0 1 .366-.075h18.78a.47.47 0 0 1 .252.074a.453.453 0 0 1 .17.196a.438.438 0 0 1 .031.255a.444.444 0 0 1-.117.23m-3.962-8.335a.92.92 0 0 0-.306-.21a.941.941 0 0 0-.367-.075H.46a.469.469 0 0 0-.252.073a.451.451 0 0 0-.17.197a.438.438 0 0 0-.031.254a.444.444 0 0 0 .117.23l3.965 4.14a.92.92 0 0 0 .305.21a.94.94 0 0 0 .366.074h18.78a.469.469 0 0 0 .252-.073a.453.453 0 0 0 .17-.196a.438.438 0 0 0 .031-.255a.444.444 0 0 0-.117-.23zM.46 6.723h18.782a.941.941 0 0 0 .367-.075a.92.92 0 0 0 .306-.21l3.962-4.14a.444.444 0 0 0 .117-.23a.438.438 0 0 0-.032-.254a.453.453 0 0 0-.17-.196a.469.469 0 0 0-.252-.073H4.76a.941.941 0 0 0-.366.074a.92.92 0 0 0-.305.21L.125 5.97a.444.444 0 0 0-.117.23a.438.438 0 0 0 .03.254a.451.451 0 0 0 .17.196a.469.469 0 0 0 .252.074z"/></svg>
+            <p class="price-realtime" id="RealtimeSolana">$0</p>
+            </div>
+        </div>
+        <div class="row-network">
+            <p class="latency">9ms</p>
+            <div class="row-connect">
+            <div class="circle-connect"></div>
+            <p class="text-connect">Connected</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Popup -->
+    <div class="container-filter">
+        <div class="wrapper-header">
+            <span class="title-header">Filters</span>
+            <button class="btn btn-default btn-close">X</button>
+        </div>
+        <div class="wrapper-filter">
+            <div class="dropdown-wrapper" id="dropdownWrapper1">
+                <!-- Trigger -->
+                <div class="dropdown-trigger" data-dropdown="1">
+                    <span class="trigger-text">CHG % (1h)</span>
+                    <!-- SVG Chevron Down / Up -->
+                    <svg class="chevron-svg" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 6 L8 10 L12 6" />
+                    </svg>
+                </div>
+
+                <!-- Dropdown Panel -->
+                <div class="dropdown-panel" data-panel="1">
+                    <div class="panel-inner">
+                        <!-- Group: Core -->
+                        <div class="group-title">Core</div>
+                        <div class="option-item" data-value="Price">Price</div>
+                        <div class="option-item" data-value="OI $">OI $</div>
+                        <div class="option-item" data-value="Funding">Funding</div>
+                        <div class="option-item" data-value="RVOL">RVOL</div>
+                        <div class="option-item" data-value="MCAP">MCAP</div>
+
+                        <!-- Divider -->
+                        <div class="group-divider"></div>
+
+                        <!-- Group: Change % -->
+                        <div class="group-title">Change %</div>
+                        <div class="option-item" data-value="CHG % (5m)">CHG % (5m)</div>
+                        <div class="option-item" data-value="CHG % (15m)">CHG % (15m)</div>
+                        <div class="option-item active" data-value="CHG % (1h)">CHG % (1h)</div>
+                        <div class="option-item" data-value="CHG % (4h)">CHG % (4h)</div>
+                        <div class="option-item" data-value="CHG % (8h)">CHG % (8h)</div>
+                        <div class="option-item" data-value="CHG % (12h)">CHG % (12h)</div>
+                        <div class="option-item" data-value="CHG % (1d)">CHG % (1d)</div>
+                        
+                        <!-- Divider -->
+                        <div class="group-divider"></div>
+
+                        <!-- Group: Change $ -->
+                        <div class="group-title">Change $</div>
+                        <div class="option-item" data-value="CHG $ (5m)">CHG $ (5m)</div>
+                        <div class="option-item" data-value="CHG $ (15m)">CHG $ (15m)</div>
+                        <div class="option-item" data-value="CHG $ (1h)">CHG $ (1h)</div>
+                        <div class="option-item" data-value="CHG $ (4h)">CHG $ (4h)</div>
+                        <div class="option-item" data-value="CHG $ (8h)">CHG $ (8h)</div>
+                        <div class="option-item" data-value="CHG $ (12h)">CHG $ (12h)</div>
+                        <div class="option-item" data-value="CHG $ (1d)">CHG $ (1d)</div>
+
+                        <!-- Divider -->
+                        <div class="group-divider"></div>
+
+                        <!-- Group: Volume -->
+                        <div class="group-title">Volume</div>
+                        <div class="option-item" data-value="Vol (5m)">Vol (5m)</div>
+                        <div class="option-item" data-value="Vol (15m)">Vol (15m)</div>
+                        <div class="option-item" data-value="Vol (1h)">Vol (1h)</div>
+                        <div class="option-item" data-value="Vol (4h)">Vol (4h)</div>
+                        <div class="option-item" data-value="Vol (8h)">Vol (8h)</div>
+                        <div class="option-item" data-value="Vol (12h)">Vol (12h)</div>
+                        <div class="option-item" data-value="Vol (1d)">Vol (1d)</div>
+
+                        <!-- Divider -->
+                        <div class="group-divider"></div>
+
+                        <!-- Group: Trades -->
+                        <div class="group-title">Trades</div>
+                        <div class="option-item" data-value="Trd (5m)">Trd (5m)</div>
+                        <div class="option-item" data-value="Trd (15m)">Trd (15m)</div>
+                        <div class="option-item" data-value="Trd (1h)">Trd (1h)</div>
+                        <div class="option-item" data-value="Trd (4h)">Trd (4h)</div>
+                        <div class="option-item" data-value="Trd (8h)">Trd (8h)</div>
+                        <div class="option-item" data-value="Trd (12h)">Trd (12h)</div>
+                        <div class="option-item" data-value="Trd (1d)">Trd (1d)</div>
+
+                        <!-- Divider -->
+                        <div class="group-divider"></div>
+
+                        <!-- Group: Volatility -->
+                        <div class="group-title">Volatility</div>
+                        <div class="option-item" data-value="Vlt (5m)">Vlt (5m)</div>
+                        <div class="option-item" data-value="Vlt (15m)">Vlt (15m)</div>
+                        <div class="option-item" data-value="Vlt (1h)">Vlt (1h)</div>
+                        <div class="option-item" data-value="Vlt (4h)">Vlt (4h)</div>
+                        <div class="option-item" data-value="Vlt (8h)">Vlt (8h)</div>
+                        <div class="option-item" data-value="Vlt (12h)">Vlt (12h)</div>
+                        <div class="option-item" data-value="Vlt (1d)">Vlt (1d)</div>
+
+                        <!-- Divider -->
+                        <div class="group-divider"></div>
+
+                        <!-- Group: OI Change % -->
+                        <div class="group-title">Oi Change %</div>
+                        <div class="option-item" data-value="OI CHG % (5m)">OI CHG % (5m)</div>
+                        <div class="option-item" data-value="OI CHG % (15m)">OI CHG % (15m)</div>
+                        <div class="option-item" data-value="OI CHG % (1h)">OI CHG % (1h)</div>
+                        <div class="option-item" data-value="OI CHG % (4h)">OI CHG % (4h)</div>
+                        <div class="option-item" data-value="OI CHG % (8h)">OI CHG % (8h)</div>
+                        <div class="option-item" data-value="OI CHG % (12h)">OI CHG % (12h)</div>
+                        <div class="option-item" data-value="OI CHG % (1d)">OI CHG % (1d)</div>
+
+                        <!-- Divider -->
+                        <div class="group-divider"></div>
+
+                        <!-- Group: OI Change $ -->
+                        <div class="group-title">Oi Change $</div>
+                        <div class="option-item" data-value="OI CHG $ (5m)">OI CHG $ (5m)</div>
+                        <div class="option-item" data-value="OI CHG $ (15m)">OI CHG $ (15m)</div>
+                        <div class="option-item" data-value="OI CHG $ (1h)">OI CHG $ (1h)</div>
+                        <div class="option-item" data-value="OI CHG $ (4h)">OI CHG $ (4h)</div>
+                        <div class="option-item" data-value="OI CHG $ (8h)">OI CHG $ (8h)</div>
+                        <div class="option-item" data-value="OI CHG $ (12h)">OI CHG $ (12h)</div>
+                        <div class="option-item" data-value="OI CHG $ (1d)">OI CHG $ (1d)</div>
+
+                        <!-- Divider -->
+                        <div class="group-divider"></div>
+
+                        <!-- Group: CVD -->
+                        <div class="group-title">CVD</div>
+                        <div class="option-item" data-value="CVD (5m)">CVD (5m)</div>
+                        <div class="option-item" data-value="CVD (15m)">CVD (15m)</div>
+                        <div class="option-item" data-value="CVD (1h)">CVD (1h)</div>
+                        <div class="option-item" data-value="CVD (4h)">CVD (4h)</div>
+                        <div class="option-item" data-value="CVD (8h)">CVD (8h)</div>
+                        <div class="option-item" data-value="CVD (12h)">CVD (12h)</div>
+                        <div class="option-item" data-value="CVD (1d)">CVD (1d)</div>
+
+                        <!-- Divider -->
+                        <div class="group-divider"></div>
+
+                        <!-- Group: Vol Change % -->
+                        <div class="group-title">Vol Change %</div>
+                        <div class="option-item" data-value="VOL CHG % (5m)">VOL CHG % (5m)</div>
+                        <div class="option-item" data-value="VOL CHG % (15m)">VOL CHG % (15m)</div>
+                        <div class="option-item" data-value="VOL CHG % (1h)">VOL CHG % (1h)</div>
+                        <div class="option-item" data-value="VOL CHG % (4h)">VOL CHG % (4h)</div>
+                        <div class="option-item" data-value="VOL CHG % (8h)">VOL CHG % (8h)</div>
+                        <div class="option-item" data-value="VOL CHG % (12h)">VOL CHG % (12h)</div>
+                        <div class="option-item" data-value="VOL CHG % (1d)">VOL CHG % (1d)</div>
+
+                        <!-- Divider -->
+                        <div class="group-divider"></div>
+
+                        <!-- Group: Vol Change $ -->
+                        <div class="group-title">Vol Change $</div>
+                        <div class="option-item" data-value="VOL CHG $ (5m)">VOL CHG $ (5m)</div>
+                        <div class="option-item" data-value="VOL CHG $ (15m)">VOL CHG $ (15m)</div>
+                        <div class="option-item" data-value="VOL CHG $ (1h)">VOL CHG $ (1h)</div>
+                        <div class="option-item" data-value="VOL CHG $ (4h)">VOL CHG $ (4h)</div>
+                        <div class="option-item" data-value="VOL CHG $ (8h)">VOL CHG $ (8h)</div>
+                        <div class="option-item" data-value="VOL CHG $ (12h)">VOL CHG $ (12h)</div>
+                        <div class="option-item" data-value="VOL CHG $ (1d)">VOL CHG $ (1d)</div>
+
+                        <!-- Divider -->
+                        <div class="group-divider"></div>
+
+                        <!-- Group: Btc Corr -->
+                        <div class="group-title">Btc Corr</div>
+                        <div class="option-item" data-value="COR (5m)">COR (5m)</div>
+                        <div class="option-item" data-value="COR (15m)">COR (15m)</div>
+                        <div class="option-item" data-value="COR (1h)">COR (1h)</div>
+                        <div class="option-item" data-value="COR (4h)">COR (4h)</div>
+                        <div class="option-item" data-value="COR (8h)">COR (8h)</div>
+                        <div class="option-item" data-value="COR (12h)">COR (12h)</div>
+                        <div class="option-item" data-value="COR (1d)">COR (1d)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="column-filter">
+                <div class="dropdown-wrapper" id="dropdownWrapper2">
+                    <div class="dropdown-trigger" data-dropdown="2">
+                        <span class="trigger-text">></span>
+                        <!-- SVG Chevron Down / Up -->
+                        <svg class="chevron-svg" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 6 L8 10 L12 6" />
+                        </svg>
+                    </div>
+                    <div class="dropdown-panel" data-panel="2">
+                        <div class="panel-inner">
+                            <div class="option-item" data-value=">">&gt;</div>
+                            <div class="option-item" data-value=">=">&gt;=</div>
+                            <div class="option-item" data-value="<">&lt;</div>
+                            <div class="option-item" data-value="<=">&lt;=</div>
+                            <div class="option-item" data-value="=">=</div>
+                            <div class="option-item" data-value="Between">Between</div>
+                            <div class="option-item" data-value="|x| >">|x| &gt;</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <input type="number" placeholder="0">
+            </div>
+        </div>
+        <div class="wrapper-button">
+            <button class="btn btn-default btn-popup">Add Filters</button>
+            <button class="btn btn-default btn-popup">Clear All</button>
+        </div>
+    </div>
+
+    <div class="container-column">
+        <div class="wrapper-header">
+            <span class="title-header">Column Visibility</span>
+            <button class="btn btn-default btn-close">X</button>
+        </div>
+        <div class="wrapper-core">
+            <div class="column-header">
+                <span>Core</span>
+            </div>
+            <div class="wrapper-column">
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox">
+                    <span>Symbol</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox">
+                    <span>Price</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox">
+                    <span>Oi $</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox">
+                    <span>Founding</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox">
+                    <span>RVOL</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox">
+                    <span>MCAP</span>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper-subcore">
+            <div class="wrapper-core">
+                <div class="column-header">
+                    <span>Change %</span>
+                    <button class="btn btn-column">Show All</button>
+                </div>
+                <div class="wrapper-column">
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>5m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>15m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>4h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>8h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>12h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1d</span>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper-core">
+                <div class="column-header">
+                    <span>Change $</span>
+                    <button class="btn btn-column">Show All</button>
+                </div>
+                <div class="wrapper-column">
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>5m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>15m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>4h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>8h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>12h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1d</span>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper-core">
+                <div class="column-header">
+                    <span>Volume</span>
+                    <button class="btn btn-column">Show All</button>
+                </div>
+                <div class="wrapper-column">
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>5m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>15m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>4h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>8h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>12h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1d</span>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper-core">
+                <div class="column-header">
+                    <span>Trades</span>
+                    <button class="btn btn-column">Show All</button>
+                </div>
+                <div class="wrapper-column">
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>5m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>15m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>4h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>8h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>12h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1d</span>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper-core">
+                <div class="column-header">
+                    <span>Volatility</span>
+                    <button class="btn btn-column">Show All</button>
+                </div>
+                <div class="wrapper-column">
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>5m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>15m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>4h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>8h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>12h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1d</span>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper-core">
+                <div class="column-header">
+                    <span>Oi Change %</span>
+                    <button class="btn btn-column">Show All</button>
+                </div>
+                <div class="wrapper-column">
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>5m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>15m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>4h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>8h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>12h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1d</span>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper-core">
+                <div class="column-header">
+                    <span>Oi Change $</span>
+                    <button class="btn btn-column">Show All</button>
+                </div>
+                <div class="wrapper-column">
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>5m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>15m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>4h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>8h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>12h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1d</span>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper-core">
+                <div class="column-header">
+                    <span>Cvd</span>
+                    <button class="btn btn-column">Show All</button>
+                </div>
+                <div class="wrapper-column">
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>5m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>15m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>4h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>8h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>12h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1d</span>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper-core">
+                <div class="column-header">
+                    <span>Vol Change %</span>
+                    <button class="btn btn-column">Show All</button>
+                </div>
+                <div class="wrapper-column">
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>5m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>15m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>4h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>8h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>12h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1d</span>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper-core">
+                <div class="column-header">
+                    <span>Vol Change $</span>
+                    <button class="btn btn-column">Show All</button>
+                </div>
+                <div class="wrapper-column">
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>5m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>15m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>4h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>8h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>12h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1d</span>
+                    </div>
+                </div>
+            </div>
+            <div class="wrapper-core">
+                <div class="column-header">
+                    <span>Btc Corr</span>
+                    <button class="btn btn-column">Show All</button>
+                </div>
+                <div class="wrapper-column">
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>5m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>15m</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>4h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>8h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>12h</span>
+                    </div>
+                    <div class="box-column">
+                        <input type="checkbox" class="ui-checkbox">
+                        <span>1d</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="wrapper-button">
+            <button class="btn btn-default btn-popup">ALL</button>
+            <button class="btn btn-default btn-popup">Defaults</button>
+            <button class="btn btn-default btn-popup">Core Only</button>
+        </div>
+    </div>
+
+    <script src="Script/Script.js"></script>
+</body>
+</html>
