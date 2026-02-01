@@ -137,6 +137,15 @@ a {
   color: var(--white);
 }
 
+.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.disabled > * {
+  pointer-events: none;
+}
+
 /* Btn Global */
 .btn {
   position: relative;

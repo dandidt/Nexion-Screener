@@ -51,7 +51,7 @@
                     Big Movers
                 </button>
                 <button class="btn btn-default btn-filter">
-                    High Founding
+                    High Funding
                 </button>
                 <button class="btn btn-default btn-filter on-filter" id="BtnFilter">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="2 3 20 18" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
@@ -314,28 +314,28 @@
                 <span>Core</span>
             </div>
             <div class="wrapper-column">
-                <div class="box-column">
-                    <input type="checkbox" class="ui-checkbox">
+                <div class="box-column disabled">
+                    <input type="checkbox" class="ui-checkbox" checked>
                     <span>Symbol</span>
                 </div>
                 <div class="box-column">
-                    <input type="checkbox" class="ui-checkbox">
+                    <input type="checkbox" class="ui-checkbox" data-field="price">
                     <span>Price</span>
                 </div>
                 <div class="box-column">
-                    <input type="checkbox" class="ui-checkbox">
+                    <input type="checkbox" class="ui-checkbox" data-field="openInterestUsd">
                     <span>Oi $</span>
                 </div>
                 <div class="box-column">
-                    <input type="checkbox" class="ui-checkbox">
-                    <span>Founding</span>
+                    <input type="checkbox" class="ui-checkbox" data-field="fundingRate">
+                    <span>Funding</span>
                 </div>
-                <div class="box-column">
+                <!-- <div class="box-column">
                     <input type="checkbox" class="ui-checkbox">
                     <span>RVOL</span>
-                </div>
+                </div> -->
                 <div class="box-column">
-                    <input type="checkbox" class="ui-checkbox">
+                    <input type="checkbox" class="ui-checkbox" data-field="mcap">
                     <span>MCAP</span>
                 </div>
             </div>
@@ -343,398 +343,408 @@
         <div class="wrapper-subcore">
             <div class="wrapper-core">
                 <div class="column-header">
-                    <span>Change %</span>
-                    <button class="btn btn-column">Show All</button>
+                <span>Change %</span>
+                <button class="btn btn-column">Show All</button>
                 </div>
                 <div class="wrapper-column">
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>5m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>15m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>4h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>8h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>12h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1d</span>
-                    </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf5m.changePercent">
+                    <span>5m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf15m.changePercent">
+                    <span>15m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1h.changePercent">
+                    <span>1h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf4h.changePercent">
+                    <span>4h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf8h.changePercent">
+                    <span>8h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf12h.changePercent">
+                    <span>12h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1d.changePercent">
+                    <span>1d</span>
+                </div>
                 </div>
             </div>
+
             <div class="wrapper-core">
                 <div class="column-header">
-                    <span>Change $</span>
-                    <button class="btn btn-column">Show All</button>
+                <span>Change $</span>
+                <button class="btn btn-column">Show All</button>
                 </div>
                 <div class="wrapper-column">
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>5m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>15m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>4h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>8h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>12h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1d</span>
-                    </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf5m.changeDollar">
+                    <span>5m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf15m.changeDollar">
+                    <span>15m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1h.changeDollar">
+                    <span>1h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf4h.changeDollar">
+                    <span>4h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf8h.changeDollar">
+                    <span>8h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf12h.changeDollar">
+                    <span>12h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1d.changeDollar">
+                    <span>1d</span>
+                </div>
                 </div>
             </div>
+
             <div class="wrapper-core">
                 <div class="column-header">
-                    <span>Volume</span>
-                    <button class="btn btn-column">Show All</button>
+                <span>Volume</span>
+                <button class="btn btn-column">Show All</button>
                 </div>
                 <div class="wrapper-column">
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>5m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>15m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>4h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>8h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>12h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1d</span>
-                    </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf5m.volume">
+                    <span>5m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf15m.volume">
+                    <span>15m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1h.volume">
+                    <span>1h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf4h.volume">
+                    <span>4h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf8h.volume">
+                    <span>8h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf12h.volume">
+                    <span>12h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1d.volume">
+                    <span>1d</span>
+                </div>
                 </div>
             </div>
+
             <div class="wrapper-core">
                 <div class="column-header">
-                    <span>Trades</span>
-                    <button class="btn btn-column">Show All</button>
+                <span>Trades</span>
+                <button class="btn btn-column">Show All</button>
                 </div>
                 <div class="wrapper-column">
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>5m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>15m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>4h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>8h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>12h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1d</span>
-                    </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf5m.trades">
+                    <span>5m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf15m.trades">
+                    <span>15m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1h.trades">
+                    <span>1h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf4h.trades">
+                    <span>4h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf8h.trades">
+                    <span>8h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf12h.trades">
+                    <span>12h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1d.trades">
+                    <span>1d</span>
+                </div>
                 </div>
             </div>
+
             <div class="wrapper-core">
                 <div class="column-header">
-                    <span>Volatility</span>
-                    <button class="btn btn-column">Show All</button>
+                <span>Volatility</span>
+                <button class="btn btn-column">Show All</button>
                 </div>
                 <div class="wrapper-column">
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>5m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>15m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>4h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>8h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>12h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1d</span>
-                    </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf5m.volatility">
+                    <span>5m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf15m.volatility">
+                    <span>15m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1h.volatility">
+                    <span>1h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf4h.volatility">
+                    <span>4h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf8h.volatility">
+                    <span>8h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf12h.volatility">
+                    <span>12h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1d.volatility">
+                    <span>1d</span>
+                </div>
                 </div>
             </div>
+
             <div class="wrapper-core">
                 <div class="column-header">
-                    <span>Oi Change %</span>
-                    <button class="btn btn-column">Show All</button>
+                <span>Oi Change %</span>
+                <button class="btn btn-column">Show All</button>
                 </div>
                 <div class="wrapper-column">
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>5m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>15m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>4h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>8h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>12h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1d</span>
-                    </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf5m.oiChange">
+                    <span>5m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf15m.oiChange">
+                    <span>15m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1h.oiChange">
+                    <span>1h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf4h.oiChange">
+                    <span>4h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf8h.oiChange">
+                    <span>8h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf12h.oiChange">
+                    <span>12h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1d.oiChange">
+                    <span>1d</span>
+                </div>
                 </div>
             </div>
+
             <div class="wrapper-core">
                 <div class="column-header">
-                    <span>Oi Change $</span>
-                    <button class="btn btn-column">Show All</button>
+                <span>Oi Change $</span>
+                <button class="btn btn-column">Show All</button>
                 </div>
                 <div class="wrapper-column">
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>5m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>15m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>4h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>8h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>12h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1d</span>
-                    </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf5m.oiChangeDollar">
+                    <span>5m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf15m.oiChangeDollar">
+                    <span>15m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1h.oiChangeDollar">
+                    <span>1h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf4h.oiChangeDollar">
+                    <span>4h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf8h.oiChangeDollar">
+                    <span>8h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf12h.oiChangeDollar">
+                    <span>12h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1d.oiChangeDollar">
+                    <span>1d</span>
+                </div>
                 </div>
             </div>
+
             <div class="wrapper-core">
                 <div class="column-header">
-                    <span>Cvd</span>
-                    <button class="btn btn-column">Show All</button>
+                <span>Cvd</span>
+                <button class="btn btn-column">Show All</button>
                 </div>
                 <div class="wrapper-column">
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>5m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>15m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>4h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>8h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>12h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1d</span>
-                    </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf5m.vdelta">
+                    <span>5m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf15m.vdelta">
+                    <span>15m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1h.vdelta">
+                    <span>1h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf4h.vdelta">
+                    <span>4h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf8h.vdelta">
+                    <span>8h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf12h.vdelta">
+                    <span>12h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1d.vdelta">
+                    <span>1d</span>
+                </div>
                 </div>
             </div>
+
             <div class="wrapper-core">
                 <div class="column-header">
-                    <span>Vol Change %</span>
-                    <button class="btn btn-column">Show All</button>
+                <span>Vol Change %</span>
+                <button class="btn btn-column">Show All</button>
                 </div>
                 <div class="wrapper-column">
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>5m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>15m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>4h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>8h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>12h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1d</span>
-                    </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf5m.volumeChange">
+                    <span>5m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf15m.volumeChange">
+                    <span>15m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1h.volumeChange">
+                    <span>1h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf4h.volumeChange">
+                    <span>4h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf8h.volumeChange">
+                    <span>8h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf12h.volumeChange">
+                    <span>12h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1d.volumeChange">
+                    <span>1d</span>
+                </div>
                 </div>
             </div>
+
             <div class="wrapper-core">
                 <div class="column-header">
-                    <span>Vol Change $</span>
-                    <button class="btn btn-column">Show All</button>
+                <span>Vol Change $</span>
+                <button class="btn btn-column">Show All</button>
                 </div>
                 <div class="wrapper-column">
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>5m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>15m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>4h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>8h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>12h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1d</span>
-                    </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf5m.volumeChangeDollar">
+                    <span>5m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf15m.volumeChangeDollar">
+                    <span>15m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1h.volumeChangeDollar">
+                    <span>1h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf4h.volumeChangeDollar">
+                    <span>4h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf8h.volumeChangeDollar">
+                    <span>8h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf12h.volumeChangeDollar">
+                    <span>12h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1d.volumeChangeDollar">
+                    <span>1d</span>
+                </div>
                 </div>
             </div>
+
             <div class="wrapper-core">
                 <div class="column-header">
-                    <span>Btc Corr</span>
-                    <button class="btn btn-column">Show All</button>
+                <span>Btc Corr</span>
+                <button class="btn btn-column">Show All</button>
                 </div>
                 <div class="wrapper-column">
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>5m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>15m</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>4h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>8h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>12h</span>
-                    </div>
-                    <div class="box-column">
-                        <input type="checkbox" class="ui-checkbox">
-                        <span>1d</span>
-                    </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf5m.btcCorrelation">
+                    <span>5m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf15m.btcCorrelation">
+                    <span>15m</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1h.btcCorrelation">
+                    <span>1h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf4h.btcCorrelation">
+                    <span>4h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf8h.btcCorrelation">
+                    <span>8h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf12h.btcCorrelation">
+                    <span>12h</span>
+                </div>
+                <div class="box-column">
+                    <input type="checkbox" class="ui-checkbox" data-field="tf1d.btcCorrelation">
+                    <span>1d</span>
+                </div>
                 </div>
             </div>
         </div>

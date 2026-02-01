@@ -40,45 +40,219 @@ const tbody = table.querySelector("tbody");
 let dragColIndex = null;
 const sortStates = {};
 let activeSortCol = null;
+let CURRENT_TICKERS = [];
 
 const FIELDS = [
-  // Core
-  "price", 
-  "openInterestUsd", 
+  // ===== Core =====
+  "price",
+  "openInterestUsd",
   "fundingRate",
   "mcap",
 
-  // Change %
-  // Change $
-  // Volume
-  // Trades
-  // Volatility
-  // Open Interest Changes %
-  // Open Interest Changes $
-  // CVD
-  // Voume Changes %
-  // Voume Changes $
-  // Btc Corr
+  // ===== Change % =====
+  "tf5m.changePercent",
+  "tf15m.changePercent",
+  "tf1h.changePercent",
+  "tf4h.changePercent",
+  "tf8h.changePercent",
+  "tf12h.changePercent",
+  "tf1d.changePercent",
+
+  // ===== Change $ =====
+  "tf5m.changeDollar",
+  "tf15m.changeDollar",
+  "tf1h.changeDollar",
+  "tf4h.changeDollar",
+  "tf8h.changeDollar",
+  "tf12h.changeDollar",
+  "tf1d.changeDollar",
+
+  // ===== Volume =====
+  "tf5m.volume",
+  "tf15m.volume",
+  "tf1h.volume",
+  "tf4h.volume",
+  "tf8h.volume",
+  "tf12h.volume",
+  "tf1d.volume",
+
+  // ===== Trades =====
+  "tf5m.trades",
+  "tf15m.trades",
+  "tf1h.trades",
+  "tf4h.trades",
+  "tf8h.trades",
+  "tf12h.trades",
+  "tf1d.trades",
+
+  // ===== Volatility =====
+  "tf5m.volatility",
+  "tf15m.volatility",
+  "tf1h.volatility",
+  "tf4h.volatility",
+  "tf8h.volatility",
+  "tf12h.volatility",
+  "tf1d.volatility",
+
+  // ===== OI Change % =====
+  "tf5m.oiChange",
+  "tf15m.oiChange",
+  "tf1h.oiChange",
+  "tf4h.oiChange",
+  "tf8h.oiChange",
+  "tf12h.oiChange",
+  "tf1d.oiChange",
+
+  // ===== OI Change $ =====
+  "tf5m.oiChangeDollar",
+  "tf15m.oiChangeDollar",
+  "tf1h.oiChangeDollar",
+  "tf4h.oiChangeDollar",
+  "tf8h.oiChangeDollar",
+  "tf12h.oiChangeDollar",
+  "tf1d.oiChangeDollar",
+
+  // ===== CVD =====
+  "tf5m.vdelta",
+  "tf15m.vdelta",
+  "tf1h.vdelta",
+  "tf4h.vdelta",
+  "tf8h.vdelta",
+  "tf12h.vdelta",
+  "tf1d.vdelta",
+
+  // ===== Volume Change % =====
+  "tf5m.volumeChange",
+  "tf15m.volumeChange",
+  "tf1h.volumeChange",
+  "tf4h.volumeChange",
+  "tf8h.volumeChange",
+  "tf12h.volumeChange",
+  "tf1d.volumeChange",
+
+  // ===== Volume Change $ =====
+  "tf5m.volumeChangeDollar",
+  "tf15m.volumeChangeDollar",
+  "tf1h.volumeChangeDollar",
+  "tf4h.volumeChangeDollar",
+  "tf8h.volumeChangeDollar",
+  "tf12h.volumeChangeDollar",
+  "tf1d.volumeChangeDollar",
+
+  // ===== BTC Correlation =====
+  "tf5m.btcCorrelation",
+  "tf15m.btcCorrelation",
+  "tf1h.btcCorrelation",
+  "tf4h.btcCorrelation",
+  "tf8h.btcCorrelation",
+  "tf12h.btcCorrelation",
+  "tf1d.btcCorrelation",
 ];
 
 const FIELD_LABELS = {
   // Core
-  price: "Price",
+  price: "PRICE",
   openInterestUsd: "OI $",
-  fundingRate: "Funding",
-  mcap: "Mcap"
+  fundingRate: "FUNDING",
+  mcap: "MCAP",
 
   // Change %
+  "tf5m.changePercent": "CHG 5M %",
+  "tf15m.changePercent": "CHG 15M %",
+  "tf1h.changePercent": "CHG 1H %",
+  "tf4h.changePercent": "CHG 4H %",
+  "tf8h.changePercent": "CHG 8H %",
+  "tf12h.changePercent": "CHG 12H %",
+  "tf1d.changePercent": "CHG 1D %",
+
   // Change $
+  "tf5m.changeDollar": "CHG 5M $",
+  "tf15m.changeDollar": "CHG 15M $",
+  "tf1h.changeDollar": "CHG 1H $",
+  "tf4h.changeDollar": "CHG 4H $",
+  "tf8h.changeDollar": "CHG 8H $",
+  "tf12h.changeDollar": "CHG 12H $",
+  "tf1d.changeDollar": "CHG 1D $",
+
   // Volume
+  "tf5m.volume": "VOL 5M",
+  "tf15m.volume": "VOL 15M",
+  "tf1h.volume": "VOL 1H",
+  "tf4h.volume": "VOL 4H",
+  "tf8h.volume": "VOL 8H",
+  "tf12h.volume": "VOL 12H",
+  "tf1d.volume": "VOL 1D",
+
   // Trades
+  "tf5m.trades": "TRD 5M",
+  "tf15m.trades": "TRD 15M",
+  "tf1h.trades": "TRD 1H",
+  "tf4h.trades": "TRD 4H",
+  "tf8h.trades": "TRD 8H",
+  "tf12h.trades": "TRD 12H",
+  "tf1d.trades": "TRD 1D",
+
   // Volatility
-  // Open Interest Changes %
-  // Open Interest Changes $
+  "tf5m.volatility": "VLT 5M",
+  "tf15m.volatility": "VLT 15M",
+  "tf1h.volatility": "VLT 1H",
+  "tf4h.volatility": "VLT 4H",
+  "tf8h.volatility": "VLT 8H",
+  "tf12h.volatility": "VLT 12H",
+  "tf1d.volatility": "VLT 1D",
+
+  // OI
+  "tf5m.oiChange": "OI CHG % 5M",
+  "tf15m.oiChange": "OI CHG % 15M",
+  "tf1h.oiChange": "OI CHG % 1H",
+  "tf4h.oiChange": "OI CHG % 4H",
+  "tf8h.oiChange": "OI CHG % 8H",
+  "tf12h.oiChange": "OI CHG % 12H",
+  "tf1d.oiChange": "OI CHG % 1D",
+
+  "tf5m.oiChangeDollar": "OI CHG $ 5M",
+  "tf15m.oiChangeDollar": "OI CHG $ 15M",
+  "tf1h.oiChangeDollar": "OI CHG $ 1H",
+  "tf4h.oiChangeDollar": "OI CHG $ 4H",
+  "tf8h.oiChangeDollar": "OI CHG $ 8H",
+  "tf12h.oiChangeDollar": "OI CHG $ 12H",
+  "tf1d.oiChangeDollar": "OI CHG $ 1D",
+
   // CVD
-  // Voume Changes %
-  // Voume Changes $
-  // Btc Corr
+  "tf5m.vdelta": "CVD 5M",
+  "tf15m.vdelta": "CVD 15M",
+  "tf1h.vdelta": "CVD 1H",
+  "tf4h.vdelta": "CVD 4H",
+  "tf8h.vdelta": "CVD 8H",
+  "tf12h.vdelta": "CVD 12H",
+  "tf1d.vdelta": "CVD 1D",
+
+  // VOL CHG
+  "tf5m.volumeChange": "VOL CHG 5M",
+  "tf15m.volumeChange": "VOL CHG 15M",
+  "tf1h.volumeChange": "VOL CHG 1H",
+  "tf4h.volumeChange": "VOL CHG 4h",
+  "tf8h.volumeChange": "VOL CHG 8H",
+  "tf12h.volumeChange": "VOL CHG 12H",
+  "tf1d.volumeChange": "VOL CHG 1D",
+
+  // VOL CHG $
+  "tf5m.volumeChangeDollar": "VOL CHG $ 5M",
+  "tf15m.volumeChangeDollar": "VOL CHG $ 15M",
+  "tf1h.volumeChangeDollar": "VOL CHG $ 1H",
+  "tf4h.volumeChangeDollar": "VOL CHG $ 4H",
+  "tf8h.volumeChangeDollar": "VOL CHG $ 8H",
+  "tf12h.volumeChangeDollar": "VOL CHG $ 12H",
+  "tf1d.volumeChangeDollar": "VOL CHG $ 1D",
+
+  // BTC Corr
+  "tf5m.btcCorrelation": "COR 5M",
+  "tf15m.btcCorrelation": "COR 15M",
+  "tf1h.btcCorrelation": "COR 1H",
+  "tf4h.btcCorrelation": "COR 4H",
+  "tf8h.btcCorrelation": "COR 8H",
+  "tf12h.btcCorrelation": "COR 12H",
+  "tf1d.btcCorrelation": "COR 1D",
 };
 
 const FORMATTERS = {
@@ -89,6 +263,14 @@ const FORMATTERS = {
   mcap: formatUSDShort,
 
   // Change %
+  "tf5m.changePercent": formatPercent,
+  "tf15m.changePercent": formatPercent,
+  "tf1h.changePercent": formatPercent,
+  "tf4h.changePercent": formatPercent,
+  "tf8h.changePercent": formatPercent,
+  "tf12h.changePercent": formatPercent,
+  "tf1d.changePercent": formatPercent,
+
   // Change $
   // Volume
   // Trades
@@ -122,9 +304,10 @@ Promise.all([
   fetch("/Apps/Screener/Data/Icon.json").then(r => r.json())
 ]).then(([binance, icons]) => {
   ICON_MAP = icons;
+  CURRENT_TICKERS = binance.tickers;
 
   buildHeader();
-  buildBody(binance.tickers);
+  buildBody(CURRENT_TICKERS);
   initDrag();
 });
 
@@ -140,7 +323,7 @@ function buildHeader() {
   trHead.appendChild(thCoin);
 
   // === DATA HEADERS ===
-  FIELDS.forEach((field, i) => {
+  getActiveFields().forEach((field, i) => {
     const th = document.createElement("th");
     const colIndex = i + 2;
     th.setAttribute("data-col-index", colIndex);
@@ -224,6 +407,10 @@ function buildHeader() {
   thead.appendChild(trHead);
 }
 
+function getDeepValue(obj, path) {
+  return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+}
+
 /* ───────── Body Data ───────── */
 function buildBody(tickers) {
   tbody.innerHTML = "";
@@ -242,16 +429,18 @@ function buildBody(tickers) {
         <span>${pair}</span>
       </div>
     `;
-
     tr.appendChild(tdCoin);
 
     // DATA COLUMNS
-    FIELDS.forEach(field => {
+    getActiveFields().forEach(field => {
       const td = document.createElement("td");
-      const raw = ticker[field];
+      
+      // PERUBAHAN DI SINI:
+      const raw = getDeepValue(ticker, field); 
+      
       const formatter = FORMATTERS[field];
 
-      td.textContent = formatter ? formatter(raw) : raw;
+      td.textContent = formatter ? formatter(raw) : (raw ?? "-");
       td.dataset.rawValue = raw;
 
       tr.appendChild(td);
@@ -358,6 +547,147 @@ function moveColumn(from, to) {
     }
   });
 }
+
+// ───────── ON OFF RENDER DATA ───────── //
+const COLUMN_CONFIG_KEY = "column_visibility_v1";
+
+const DEFAULT_COLUMN_CONFIG = {
+  "price": true,
+  "openInterestUsd": true,
+  "fundingRate": true,
+  "mcap": true,
+
+  // ===== Change % =====
+  "tf5m.changePercent": true,
+  "tf15m.changePercent": true,
+  "tf1h.changePercent": true,
+  "tf4h.changePercent": true,
+  "tf8h.changePercent": true,
+  "tf12h.changePercent": true,
+  "tf1d.changePercent": true,
+
+  // ===== Change $ =====
+  "tf5m.changeDollar": true,
+  "tf15m.changeDollar": true,
+  "tf1h.changeDollar": true,
+  "tf4h.changeDollar": true,
+  "tf8h.changeDollar": true,
+  "tf12h.changeDollar": true,
+  "tf1d.changeDollar": true,
+
+  // ===== Volume =====
+  "tf5m.volume": true,
+  "tf15m.volume": true,
+  "tf1h.volume": true,
+  "tf4h.volume": true,
+  "tf8h.volume": true,
+  "tf12h.volume": true,
+  "tf1d.volume": true,
+
+  // ===== Trades =====
+  "tf5m.trades": true,
+  "tf15m.trades": true,
+  "tf1h.trades": true,
+  "tf4h.trades": true,
+  "tf8h.trades": true,
+  "tf12h.trades": true,
+  "tf1d.trades": true,
+
+  // ===== Volatility =====
+  "tf5m.volatility": true,
+  "tf15m.volatility": true,
+  "tf1h.volatility": true,
+  "tf4h.volatility": true,
+  "tf8h.volatility": true,
+  "tf12h.volatility": true,
+  "tf1d.volatility": true,
+
+  // ===== OI Change % =====
+  "tf5m.oiChange": true,
+  "tf15m.oiChange": true,
+  "tf1h.oiChange": true,
+  "tf4h.oiChange": true,
+  "tf8h.oiChange": true,
+  "tf12h.oiChange": true,
+  "tf1d.oiChange": true,
+
+  // ===== OI Change $ =====
+  "tf5m.oiChangeDollar": true,
+  "tf15m.oiChangeDollar": true,
+  "tf1h.oiChangeDollar": true,
+  "tf4h.oiChangeDollar": true,
+  "tf8h.oiChangeDollar": true,
+  "tf12h.oiChangeDollar": true,
+  "tf1d.oiChangeDollar": true,
+
+  // ===== CVD =====
+  "tf5m.vdelta": true,
+  "tf15m.vdelta": true,
+  "tf1h.vdelta": true,
+  "tf4h.vdelta": true,
+  "tf8h.vdelta": true,
+  "tf12h.vdelta": true,
+  "tf1d.vdelta": true,
+
+  // ===== Volume Change % =====
+  "tf5m.volumeChange": true,
+  "tf15m.volumeChange": true,
+  "tf1h.volumeChange": true,
+  "tf4h.volumeChange": true,
+  "tf8h.volumeChange": true,
+  "tf12h.volumeChange": true,
+  "tf1d.volumeChange": true,
+
+  // ===== Volume Change $ =====
+  "tf5m.volumeChangeDollar": true,
+  "tf15m.volumeChangeDollar": true,
+  "tf1h.volumeChangeDollar": true,
+  "tf4h.volumeChangeDollar": true,
+  "tf8h.volumeChangeDollar": true,
+  "tf12h.volumeChangeDollar": true,
+  "tf1d.volumeChangeDollar": true,
+
+  // ===== BTC Corr =====
+  "tf5m.btcCorrelation": true,
+  "tf15m.btcCorrelation": true,
+  "tf1h.btcCorrelation": true,
+  "tf4h.btcCorrelation": true,
+  "tf8h.btcCorrelation": true,
+  "tf12h.btcCorrelation": true,
+  "tf1d.btcCorrelation": true,
+};
+
+function loadColumnConfig() {
+  return {
+    ...DEFAULT_COLUMN_CONFIG,
+    ...JSON.parse(localStorage.getItem(COLUMN_CONFIG_KEY) || "{}")
+  };
+}
+
+function saveColumnConfig(cfg) {
+  localStorage.setItem(COLUMN_CONFIG_KEY, JSON.stringify(cfg));
+}
+
+let COLUMN_CONFIG = loadColumnConfig();
+
+function getActiveFields() {
+  return FIELDS.filter(f => COLUMN_CONFIG[f] !== false);
+}
+
+document.querySelectorAll("input[type='checkbox'][data-field]").forEach(cb => {
+  const field = cb.dataset.field;
+
+  cb.checked = COLUMN_CONFIG[field] !== false;
+
+  cb.addEventListener("change", () => {
+    COLUMN_CONFIG[field] = cb.checked;
+    saveColumnConfig(COLUMN_CONFIG);
+
+    buildHeader();
+    buildBody(CURRENT_TICKERS);
+    initDrag();
+  });
+});
 
 // ───────── Popup ───────── //
 document.addEventListener("DOMContentLoaded", () => {
