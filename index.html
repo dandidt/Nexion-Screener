@@ -53,14 +53,14 @@
                 <button class="btn btn-default btn-filter" id="FilterHF">
                     High Funding
                 </button>
-                <button class="btn btn-default btn-filter on-filter" id="BtnFilter">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="2 3 20 18" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
+                <button class="btn btn-default btn-filter-svg on-filter" id="BtnFilter">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#e3e3e3"><path d="M440-154.02q-19.39 0-32.68-13.3-13.3-13.29-13.3-32.68v-237.85L156.46-741.41q-16.39-20.11-4.84-42.46T188-806.22h584q24.83 0 36.38 22.35 11.55 22.35-4.6 42.46L566.22-437.85v239.76q0 18.92-12.7 31.49-12.69 12.58-31.61 12.58H440Zm40-285.57 235.46-298.26H244.78L480-439.59Zm0 0Z"/></svg>
                     <div class="tips-filter">
                         <p>1</p>
                     </div>
                 </button>
-                <button class="btn btn-default btn-filter" id="BtnColumn">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="2 2 16 16" width="20" height="20" fill="currentColor"><path d="M3 3.5a.5.5 0 0 1 .5-.5H4a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-.5a.5.5 0 0 1 0-1H4a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-.5a.5.5 0 0 1-.5-.5ZM9 4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h.475a3.17 3.17 0 0 0-.043.155L9.22 17H9a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v6.943l-1 1V5a1 1 0 0 0-1-1H9Zm6 1v4.943l-1 1V5a2 2 0 0 1 2-2h.5a.5.5 0 0 1 0 1H16a1 1 0 0 0-1 1Zm-4.02 10.377l4.83-4.83a1.87 1.87 0 1 1 2.644 2.646l-4.83 4.829a2.197 2.197 0 0 1-1.02.578l-1.498.374a.89.89 0 0 1-1.079-1.078l.375-1.498a2.18 2.18 0 0 1 .578-1.02Z"/></svg>
+                <button class="btn btn-default btn-filter-svg" id="BtnColumn">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#e3e3e3"><path d="M445.93-365.93v-80h-80v-68.14h80v-80h68.14v80h80v68.14h-80v80h-68.14Zm-80-114.07Zm228.14 0Zm-415.5 365.98q-27.6 0-47.87-20.27-20.27-20.26-20.27-47.86v-595.7q0-27.7 20.27-48.03 20.27-20.34 47.87-20.34H383.3q27.35 0 47.74 20.34 20.39 20.33 20.39 48.03v127.02H383.3v-127.02H178.57v595.7H383.3v-127.02h68.13v127.02q0 27.6-20.39 47.86-20.39 20.27-47.74 20.27H178.57Zm398.36 0q-27.69 0-48.03-20.27-20.33-20.26-20.33-47.86v-127.02h68.36v127.02h204.5v-595.7h-204.5v127.02h-68.36v-127.02q0-27.7 20.33-48.03 20.34-20.34 48.03-20.34h204.5q27.7 0 48.04 20.34 20.33 20.33 20.33 48.03v595.7q0 27.6-20.33 47.86-20.34 20.27-48.04 20.27h-204.5Z"/></svg>
                 </button>
             </div>
         </div>
@@ -109,7 +109,7 @@
             <div class="dropdown-wrapper" id="dropdownWrapper1">
                 <!-- Trigger -->
                 <div class="dropdown-trigger" data-dropdown="1">
-                    <span class="trigger-text">CHG 1H %</span>
+                    <span class="trigger-text"></span>
                     <!-- SVG Chevron Down / Up -->
                     <svg class="chevron-svg" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                     <path d="M4 6 L8 10 L12 6" />
@@ -275,7 +275,7 @@
             <div class="column-filter">
                 <div class="dropdown-wrapper" id="dropdownWrapper2">
                     <div class="dropdown-trigger" data-dropdown="2">
-                        <span class="trigger-text">></span>
+                        <span class="trigger-text"></span>
                         <!-- SVG Chevron Down / Up -->
                         <svg class="chevron-svg" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
                         <path d="M4 6 L8 10 L12 6" />
@@ -288,13 +288,12 @@
                             <div class="option-item" data-value="<">&lt;</div>
                             <div class="option-item" data-value="<=">&lt;=</div>
                             <div class="option-item" data-value="=">=</div>
-                            <div class="option-item" data-value="Between">Between</div>
                             <div class="option-item" data-value="|x| >">|x| &gt;</div>
                         </div>
                     </div>
                 </div>
                 
-                <input type="number" placeholder="0">
+                <input type="number" placeholder="0" id="inputFilterValue">
             </div>
         </div>
         <div class="wrapper-button">

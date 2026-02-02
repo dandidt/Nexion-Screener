@@ -597,40 +597,6 @@ const FIELD_STYLE_MAP = {
   "tf1d.btcCorrelation": CELL_STYLERS.change,
 };
 
-// ───────── Preset Filter Definitions ─────────
-const PRESET_FILTERS = {
-  "FilterHV": {
-    id: "high_volume",
-    field: "tf1h.volume",
-    op: ">",
-    value: 10_000_000 // 10 juta USD
-  },
-  "FilterOS": {
-    id: "oi_spike",
-    field: "tf1h.oiChange",
-    op: ">",
-    value: 5 // 5%
-  },
-  "FilterBM": {
-    id: "big_movers",
-    field: "tf1h.changePercent",
-    op: ">",
-    value: 3 // 3%
-  },
-  "FilterHF": {
-    id: "high_funding",
-    field: "fundingRate",
-    op: "|x| >",
-    value: 0.05 // 0.05% → pastikan data funding dalam desimal (0.0005 = 0.05%)
-  }
-};
-
-// ───────── Reverse Mapping: Label UI → Field Path ─────────
-const LABEL_TO_FIELD = {};
-for (const [field, label] of Object.entries(FIELD_LABELS)) {
-  LABEL_TO_FIELD[label] = field;
-}
-
 let ICON_MAP = {};
 
 /* ───────── Reset Icon Short ───────── */
@@ -789,8 +755,11 @@ function buildBody(tickers) {
     td.style.padding = "20px";
     tr.appendChild(td);
     tbody.appendChild(tr);
+    originalRows.length = 0; 
     return;
   }
+
+  originalRows.length = 0; 
 
   tickers.forEach(ticker => {
     const tr = document.createElement("tr");
@@ -815,6 +784,7 @@ function buildBody(tickers) {
     });
 
     tbody.appendChild(tr);
+    originalRows.push(tr);
   });
 }
 
@@ -1102,18 +1072,15 @@ document.querySelectorAll(".btn-column").forEach(btn => {
   const checkboxes = wrapper.querySelectorAll("input[type='checkbox'][data-field]");
 
   btn.addEventListener("click", () => {
-    // cek apakah semua checkbox ON
     const allChecked = Array.from(checkboxes).every(cb => cb.checked);
 
     if (allChecked) {
-      // semua ON → turn OFF
       checkboxes.forEach(cb => {
         cb.checked = false;
         COLUMN_CONFIG[cb.dataset.field] = false;
       });
       btn.classList.remove("hidden-all");
     } else {
-      // ada OFF → turn ON semua
       checkboxes.forEach(cb => {
         cb.checked = true;
         COLUMN_CONFIG[cb.dataset.field] = true;
@@ -1123,13 +1090,11 @@ document.querySelectorAll(".btn-column").forEach(btn => {
 
     saveColumnConfig(COLUMN_CONFIG);
 
-    // rebuild table langsung
     buildHeader();
     buildBody(CURRENT_TICKERS);
     initDrag();
   });
 
-  // inisialisasi style sesuai state awal
   const allCheckedInit = Array.from(checkboxes).every(cb => cb.checked);
   if (allCheckedInit) btn.classList.add("hidden-all");
 });
@@ -1156,12 +1121,10 @@ function setFieldsActive(activeFields) {
 
   saveColumnConfig(COLUMN_CONFIG);
 
-  // rebuild table langsung
   buildHeader();
   refreshTable();
   initDrag();
 
-  // update btn-column style per section
   document.querySelectorAll(".wrapper-core, .wrapper-column").forEach(wrapper => {
     const sectionCheckboxes = wrapper.querySelectorAll('input[type="checkbox"][data-field]');
     const btn = wrapper.querySelector(".btn-column");
@@ -1188,6 +1151,12 @@ btnCoreOnly.addEventListener("click", () => {
 });
 
 // ───────── Filter ───────── //
+const LABEL_TO_FIELD = {};
+
+for (const [field, label] of Object.entries(FIELD_LABELS)) {
+  LABEL_TO_FIELD[label] = field;
+}
+
 const filterWrapper = document.querySelector('.wrapper-filter');
 const trigger1 = filterWrapper.querySelector('#dropdownWrapper1 .trigger-text');
 const trigger2 = filterWrapper.querySelector('#dropdownWrapper2 .trigger-text');
@@ -1218,7 +1187,6 @@ function applyFilters(tickers) {
         case '<=': return num <= threshold;
         case '=': return Math.abs(num - threshold) < 1e-9;
         case '|x| >': return Math.abs(num) > threshold;
-        // Note: "Between" butuh 2 nilai → skip dulu atau tambah nanti
         default: return true;
       }
     });
@@ -1230,45 +1198,115 @@ addFilterBtn.addEventListener('click', () => {
   const operator = trigger2.textContent.trim();
   const inputValue = valueInput.value.trim();
 
-  // Validasi
   if (!label1 || !operator || !inputValue) {
-    alert("Please select a field, operator, and enter a value.");
+    document.querySelectorAll('.dropdown-trigger, #inputFilterValue').forEach(el => {
+      el.style.border = '';
+    });
+
+    if (!label1 || label1 === 'Select...') {
+      const triggerEl = document.querySelector('#dropdownWrapper1 .dropdown-trigger');
+      if (triggerEl) triggerEl.style.border = "1px solid var(--red)";
+    }
+    if (!operator || operator === 'Select...') {
+      const triggerEl = document.querySelector('#dropdownWrapper2 .dropdown-trigger');
+      if (triggerEl) triggerEl.style.border = "1px solid var(--red)";
+    }
+    if (!inputValue) {
+      const inputEl = document.getElementById('inputFilterValue');
+      if (inputEl) inputEl.style.border = "1px solid var(--red)";
+    }
+
+    setTimeout(() => {
+      document.querySelectorAll('.dropdown-trigger, #inputFilterValue').forEach(el => {
+        el.style.border = '';
+      });
+    }, 2000);
+
     return;
   }
 
   const field = LABEL_TO_FIELD[label1];
   if (!field) {
     console.warn("Unknown field label:", label1);
+    const triggerEl = document.querySelector('#dropdownWrapper1 .dropdown-trigger');
+    if (triggerEl) triggerEl.style.border = "1px solid var(--red)";
+    setTimeout(() => {
+      if (triggerEl) triggerEl.style.border = "";
+    }, 2000);
     return;
   }
 
   const numValue = parseFloat(inputValue);
   if (isNaN(numValue)) {
-    alert("Please enter a valid number.");
+    const inputEl = document.getElementById('inputFilterValue');
+    if (inputEl) inputEl.style.border = "1px solid var(--red)";
+    setTimeout(() => {
+      if (inputEl) inputEl.style.border = "";
+    }, 2000);
     return;
   }
 
-  // Tambah filter
   activeFilters.push({
     field,
     op: operator,
     value: numValue
   });
 
-  // Terapkan ke tabel
-  refreshTable();
+  document.querySelectorAll('.btn-filter').forEach(btn => {
+    btn.classList.remove('active');
+  });
 
-  // Reset input biar user bisa tambah lagi
-  valueInput.value = '';
+  refreshTable();
 });
 
 clearFilterBtn.addEventListener('click', () => {
   activeFilters = [];
+
   valueInput.value = '';
+  trigger1.textContent = 'Select...';
+  trigger2.textContent = 'Select...';
+
+  dropdown1Trigger.dataset.selectedValue = '';
+  dropdown2Trigger.dataset.selectedValue = '';
+
+  document.querySelectorAll('.btn-filter').forEach(btn => {
+    btn.classList.remove('active');
+  });
+
   refreshTable();
 });
 
-// Ambil semua tombol shortcut
+// ───────── Filter Shortcut ───────── //
+const dropdown1Trigger = document.querySelector('#dropdownWrapper1 .dropdown-trigger');
+const dropdown2Trigger = document.querySelector('#dropdownWrapper2 .dropdown-trigger');
+
+const PRESET_FILTERS = {
+  "FilterHV": {
+    id: "high_volume",
+    field: "tf1h.volume",
+    op: ">",
+    value: 10_000_000
+  },
+  "FilterOS": {
+    id: "oi_spike",
+    field: "tf1h.oiChange",
+    op: ">",
+    value: 5
+  },
+  "FilterBM": {
+    id: "big_movers",
+    field: "tf1h.changePercent",
+    op: ">",
+    value: 3
+  },
+  "FilterHF": {
+    id: "high_funding",
+    field: "fundingRate",
+    op: "|x| >",
+    value: 0.05
+  }
+};
+
 document.querySelectorAll('.btn-filter').forEach(btn => {
   const presetKey = btn.id;
   const preset = PRESET_FILTERS[presetKey];
@@ -1276,40 +1314,52 @@ document.querySelectorAll('.btn-filter').forEach(btn => {
   if (!preset) return;
 
   btn.addEventListener('click', () => {
-    const existingIndex = activeFilters.findIndex(f => f.id === preset.id);
+    const wasActive = btn.classList.contains('active');
 
-    if (existingIndex !== -1) {
-      // Hapus filter
-      activeFilters.splice(existingIndex, 1);
-      btn.classList.remove('active'); // opsional: visual feedback
-    } else {
-      // Tambah filter + simpan ID
+    document.querySelectorAll('.btn-filter').forEach(b => b.classList.remove('active'));
+
+    activeFilters = [];
+
+    if (!wasActive) {
+      btn.classList.add('active');
+
       activeFilters.push({
         id: preset.id,
         field: preset.field,
         op: preset.op,
         value: preset.value
       });
-      btn.classList.add('active'); // opsional
+
+      const label1 = FIELD_LABELS[preset.field] || 'Select...';
+      trigger1.textContent = label1;
+      dropdown1Trigger.dataset.selectedValue = label1;
+
+      trigger2.textContent = preset.op;
+      dropdown2Trigger.dataset.selectedValue = preset.op;
+
+      valueInput.value = preset.value;
+    } else {
+      trigger1.textContent = 'Select...';
+      dropdown1Trigger.dataset.selectedValue = '';
+
+      trigger2.textContent = 'Select...';
+      dropdown2Trigger.dataset.selectedValue = '';
+
+      valueInput.value = '';
     }
 
-    // Terapkan filter & render ulang
-    refreshTable(); 
+    refreshTable();
   });
 });
 
 // ───────── Search ───────── //
-// ───────── Unified Table Refresh ─────────
 function refreshTable() {
   let data = [...CURRENT_TICKERS];
 
-  // Terapkan filter aktif (manual + preset)
   data = applyFilters(data);
 
-  // Terapkan search
   data = filterBySearch(data, currentSearchTerm);
 
-  // Render
   buildBody(data);
 }
 
@@ -1353,63 +1403,72 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!btnFilter || !btnColumn || !popupFilter || !popupColumn) return;
 
-  function togglePopup(btn, popup) {
-    const rect = btn.getBoundingClientRect();
+  function togglePopup(btn, popup, otherBtn, otherPopup) {
+    const isOpening = !popup.classList.contains("show");
 
+    otherPopup.classList.remove("show");
+    otherBtn.classList.remove("active");
+
+    const rect = btn.getBoundingClientRect();
     popup.style.position = "absolute";
     popup.style.top = `${rect.bottom + 8 + window.scrollY}px`;
-    popup.style.right = `${
-      window.innerWidth - rect.right - window.scrollX
-    }px`;
+    popup.style.right = `${window.innerWidth - rect.right - window.scrollX}px`;
 
-    popup.classList.toggle("show");
+    popup.classList.toggle("show", isOpening);
+
+    btn.classList.toggle("active", isOpening);
   }
 
   btnFilter.addEventListener("click", (e) => {
     e.stopPropagation();
-    popupColumn.classList.remove("show");
-    togglePopup(btnFilter, popupFilter);
+    togglePopup(btnFilter, popupFilter, btnColumn, popupColumn);
   });
 
   btnColumn.addEventListener("click", (e) => {
     e.stopPropagation();
-    popupFilter.classList.remove("show");
-    togglePopup(btnColumn, popupColumn);
+    togglePopup(btnColumn, popupColumn, btnFilter, popupFilter);
   });
 
-  // klik di dalam popup → JANGAN close
+  // Klik di dalam popup → jangan tutup
   [popupFilter, popupColumn].forEach((popup) => {
     popup.addEventListener("click", (e) => {
       e.stopPropagation();
     });
   });
 
-  // tombol X
+  // Tombol X → tutup semua
   closeButtons.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
       popupFilter.classList.remove("show");
       popupColumn.classList.remove("show");
+      btnFilter.classList.remove("active");
+      btnColumn.classList.remove("active");
     });
   });
 
-  // klik di luar → close
+  // Klik di luar → tutup semua
   document.addEventListener("click", () => {
     popupFilter.classList.remove("show");
     popupColumn.classList.remove("show");
+    btnFilter.classList.remove("active");
+    btnColumn.classList.remove("active");
   });
 });
 
 // ───────── Dropdown ───────── //
 function initDropdown(triggerEl, panelEl, wrapperEl) {
-  // Toggle dropdown
+  // Fungsi untuk reset ke placeholder
+  const resetToPlaceholder = () => {
+    const triggerText = triggerEl.querySelector('.trigger-text');
+    triggerText.textContent = 'Select...';
+    triggerEl.dataset.selectedValue = '';
+  };
+
   triggerEl.addEventListener('click', e => {
     e.stopPropagation();
-
     const isOpen = panelEl.classList.contains('open');
-
     closeAllDropdowns();
-
     if (!isOpen) {
       panelEl.classList.add('open');
       triggerEl.classList.add('open');
@@ -1417,18 +1476,16 @@ function initDropdown(triggerEl, panelEl, wrapperEl) {
     }
   });
 
-  // Select option
   panelEl.querySelectorAll('.option-item').forEach(item => {
     item.addEventListener('click', e => {
       e.stopPropagation();
-
-      panelEl.querySelectorAll('.option-item')
-        .forEach(i => i.classList.remove('active'));
-
+      panelEl.querySelectorAll('.option-item').forEach(i => i.classList.remove('active'));
       item.classList.add('active');
 
       const triggerText = triggerEl.querySelector('.trigger-text');
       triggerText.textContent = item.dataset.value;
+
+      triggerEl.dataset.selectedValue = item.dataset.value;
 
       closeAllDropdowns();
     });
@@ -1444,10 +1501,14 @@ function closeAllDropdowns() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.dropdown-trigger .trigger-text').forEach(el => {
+    el.textContent = 'Select...';
+    el.closest('.dropdown-trigger').dataset.selectedValue = '';
+  });
+
   document.querySelectorAll('.dropdown-wrapper').forEach(wrapper => {
     const trigger = wrapper.querySelector('.dropdown-trigger');
     const panel = wrapper.querySelector('.dropdown-panel');
-
     if (trigger && panel) {
       initDropdown(trigger, panel, wrapper);
     }

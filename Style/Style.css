@@ -720,9 +720,22 @@ input[type="number"] {
   padding: 10px 15px;
 }
 
-.btn-filter svg {
-  height: 14px;
-  width: 14px;
+.btn-filter-svg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 35px;
+  width: 35px;
+}
+
+.btn-filter-svg svg {
+  height: 20px;
+  width: 20px;
+  fill: var(--gray);
+}
+
+.btn-filter-svg.active svg {
+  fill: var(--white);
 }
 
 /* .on-filter::before {
@@ -1031,7 +1044,7 @@ input[type="number"] {
 .container-column {
   display: none;
   flex-direction: column;
-  min-width: 350px;
+  min-width: 400px;
   max-width: 450px;
   padding: 10px;
   background: var(--bg-15);
