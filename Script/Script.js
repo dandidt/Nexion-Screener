@@ -1,11 +1,11 @@
 // ───────── Format ───────── //
 const formatNumber = (val) => {
-  if (val == null || isNaN(val)) return "-";
+  if (val == null || isNaN(val)) return "N/A";
 
   const abs = Math.abs(val);
-  const formatted = new Intl.NumberFormat('en-US', {
+  const formatted = new Intl.NumberFormat("en-US", {
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    maximumFractionDigits: 2,
   }).format(abs);
 
   const sign = val > 0 ? "+" : val < 0 ? "-" : "";
@@ -14,13 +14,12 @@ const formatNumber = (val) => {
 };
 
 const formatNumberShort = (val) => {
-  if (val == null || isNaN(val)) return "-";
+  if (val == null || isNaN(val)) return "N/A";
 
   const abs = Math.abs(val);
-  
-  const formatted = new Intl.NumberFormat('en-US', {
-    notation: 'compact',
-    maximumFractionDigits: 2
+  const formatted = new Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: 2,
   }).format(abs);
 
   const sign = val < 0 ? "-" : "";
@@ -29,7 +28,7 @@ const formatNumberShort = (val) => {
 };
 
 const formatUSD = (val) => {
-  if (val == null || isNaN(val)) return "-";
+  if (val == null || isNaN(val)) return "N/A";
 
   const abs = Math.abs(val);
   let decimals = 2;
@@ -38,18 +37,18 @@ const formatUSD = (val) => {
     decimals = Math.min(10, Math.ceil(Math.abs(Math.log10(abs))) + 2);
   }
 
-  const formatted = new Intl.NumberFormat('en-US', {
+  const formatted = new Intl.NumberFormat("en-US", {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   }).format(abs);
 
   const sign = val > 0 ? "+" : val < 0 ? "-" : "";
-  
+
   return `${sign}$${formatted}`;
 };
 
 const formatUSDClear = (val) => {
-  if (val == null || isNaN(val)) return "-";
+  if (val == null || isNaN(val)) return "N/A";
 
   const abs = Math.abs(val);
   let decimals = 2;
@@ -58,7 +57,7 @@ const formatUSDClear = (val) => {
     decimals = Math.min(10, Math.ceil(Math.abs(Math.log10(abs))) + 2);
   }
 
-  const formatted = new Intl.NumberFormat('en-US', {
+  const formatted = new Intl.NumberFormat("en-US", {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
   }).format(abs);
@@ -67,15 +66,14 @@ const formatUSDClear = (val) => {
 };
 
 const formatUSDShort = (val) => {
-  if (val == null || isNaN(val)) return "-";
+  if (val == null || isNaN(val)) return "N/A";
 
   const abs = Math.abs(val);
-  
-  const formatted = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    notation: 'compact',
-    maximumFractionDigits: 2
+  const formatted = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    notation: "compact",
+    maximumFractionDigits: 2,
   }).format(abs);
 
   const sign = val > 0 ? "+" : val < 0 ? "-" : "";
@@ -84,15 +82,14 @@ const formatUSDShort = (val) => {
 };
 
 const formatUSDShortClear = (val) => {
-  if (val == null || isNaN(val)) return "-";
+  if (val == null || isNaN(val)) return "N/A";
 
   const abs = Math.abs(val);
-  
-  const formatted = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    notation: 'compact',
-    maximumFractionDigits: 2
+  const formatted = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    notation: "compact",
+    maximumFractionDigits: 2,
   }).format(abs);
 
   const sign = val < 0 ? "-" : "";
@@ -101,70 +98,52 @@ const formatUSDShortClear = (val) => {
 };
 
 const formatPercent = (val) => {
-  if (val == null || isNaN(val)) return "-";
+  if (val == null || isNaN(val)) return "N/A";
 
-  const percent = val; 
-  const abs = Math.abs(percent);
-
+  const abs = Math.abs(val);
   let decimals = 2;
 
   if (abs !== 0 && abs < 1) {
-    decimals = Math.min(
-      6,
-      Math.ceil(Math.abs(Math.log10(abs))) + 1
-    );
+    decimals = Math.min(6, Math.ceil(Math.abs(Math.log10(abs))) + 1);
   }
 
-  const formattedValue = percent.toFixed(decimals);
-  
-  const sign = percent > 0 ? "+" : "";
+  const formatted = val.toFixed(decimals);
+  const sign = val > 0 ? "+" : "";
 
-  return `${sign}${formattedValue}%`;
+  return `${sign}${formatted}%`;
 };
 
 const formatPercentClear = (val) => {
-  if (val == null || isNaN(val)) return "-";
+  if (val == null || isNaN(val)) return "N/A";
 
-  const percent = val; 
-  const abs = Math.abs(percent);
-
+  const abs = Math.abs(val);
   let decimals = 2;
 
   if (abs !== 0 && abs < 1) {
-    decimals = Math.min(
-      6,
-      Math.ceil(Math.abs(Math.log10(abs))) + 1
-    );
+    decimals = Math.min(6, Math.ceil(Math.abs(Math.log10(abs))) + 1);
   }
 
-  const formattedValue = percent.toFixed(decimals);
-
-  return `${formattedValue}%`;
+  return `${val.toFixed(decimals)}%`;
 };
 
 const formatPercentFunding = (val) => {
-  if (val == null || isNaN(val)) return "-";
+  if (val == null || isNaN(val)) return "N/A";
 
   const percent = val * 100;
   const abs = Math.abs(percent);
-
   let decimals = 2;
 
   if (abs !== 0 && abs < 1) {
-    decimals = Math.min(
-      6,
-      Math.ceil(Math.abs(Math.log10(abs))) + 1
-    );
+    decimals = Math.min(6, Math.ceil(Math.abs(Math.log10(abs))) + 1);
   }
 
-  const formattedValue = percent.toFixed(decimals);
-  
-  const sign = percent > 0 ? "+" : percent < 0 ? "" : "";
+  const formatted = percent.toFixed(decimals);
+  const sign = percent > 0 ? "+" : "";
 
-  return `${sign}${formattedValue}%`;
+  return `${sign}${formatted}%`;
 };
 
-// ───────── Button Swap Source Data ───────── //
+// ───────── Swap Source ───────── //
 const radioButtons = document.querySelectorAll('.btn-radio.source-data');
 
 radioButtons.forEach(button => {
@@ -174,12 +153,6 @@ radioButtons.forEach(button => {
 
     const sourceName = button.querySelector('span').innerText;
     document.title = `Nexion | ${sourceName}`;
-
-    if (sourceName === "Binance") {
-      CURRENT_TICKERS = [...BINANCE_DATA];
-    } else if (sourceName === "Hyperliquid") {
-      CURRENT_TICKERS = [...HYPERLIQUID_DATA];
-    }
 
     refreshTable();
 
@@ -200,13 +173,13 @@ let CURRENT_TICKERS = [];
 let activeFilters = [];
 
 const FIELDS = [
-  // ===== Core =====
+  // Core
   "price",
   "openInterestUsd",
   "fundingRate",
   "mcap",
 
-  // ===== Change % =====
+  // Change %
   "tf5m.changePercent",
   "tf15m.changePercent",
   "tf1h.changePercent",
@@ -215,7 +188,7 @@ const FIELDS = [
   "tf12h.changePercent",
   "tf1d.changePercent",
 
-  // ===== Change $ =====
+  // Change $
   "tf5m.changeDollar",
   "tf15m.changeDollar",
   "tf1h.changeDollar",
@@ -224,7 +197,7 @@ const FIELDS = [
   "tf12h.changeDollar",
   "tf1d.changeDollar",
 
-  // ===== Volume =====
+  // Volume
   "tf5m.volume",
   "tf15m.volume",
   "tf1h.volume",
@@ -233,7 +206,7 @@ const FIELDS = [
   "tf12h.volume",
   "tf1d.volume",
 
-  // ===== Trades =====
+  // Trades
   "tf5m.trades",
   "tf15m.trades",
   "tf1h.trades",
@@ -242,7 +215,7 @@ const FIELDS = [
   "tf12h.trades",
   "tf1d.trades",
 
-  // ===== Volatility =====
+  // Volatility
   "tf5m.volatility",
   "tf15m.volatility",
   "tf1h.volatility",
@@ -251,7 +224,7 @@ const FIELDS = [
   "tf12h.volatility",
   "tf1d.volatility",
 
-  // ===== OI Change % =====
+  // OI Change %
   "tf5m.oiChange",
   "tf15m.oiChange",
   "tf1h.oiChange",
@@ -260,7 +233,7 @@ const FIELDS = [
   "tf12h.oiChange",
   "tf1d.oiChange",
 
-  // ===== OI Change $ =====
+  // OI Change $
   "tf5m.oiChangeDollar",
   "tf15m.oiChangeDollar",
   "tf1h.oiChangeDollar",
@@ -269,7 +242,7 @@ const FIELDS = [
   "tf12h.oiChangeDollar",
   "tf1d.oiChangeDollar",
 
-  // ===== CVD =====
+  // CVD
   "tf5m.vdelta",
   "tf15m.vdelta",
   "tf1h.vdelta",
@@ -278,7 +251,7 @@ const FIELDS = [
   "tf12h.vdelta",
   "tf1d.vdelta",
 
-  // ===== Volume Change % =====
+  // Volume Change %
   "tf5m.volumeChange",
   "tf15m.volumeChange",
   "tf1h.volumeChange",
@@ -287,7 +260,7 @@ const FIELDS = [
   "tf12h.volumeChange",
   "tf1d.volumeChange",
 
-  // ===== Volume Change $ =====
+  // Volume Change $
   "tf5m.volumeChangeDollar",
   "tf15m.volumeChangeDollar",
   "tf1h.volumeChangeDollar",
@@ -296,7 +269,7 @@ const FIELDS = [
   "tf12h.volumeChangeDollar",
   "tf1d.volumeChangeDollar",
 
-  // ===== BTC Correlation =====
+  // BTC
   "tf5m.btcCorrelation",
   "tf15m.btcCorrelation",
   "tf1h.btcCorrelation",
@@ -388,7 +361,7 @@ const FIELD_LABELS = {
   "tf5m.volumeChange": "VOL CHG 5M",
   "tf15m.volumeChange": "VOL CHG 15M",
   "tf1h.volumeChange": "VOL CHG 1H",
-  "tf4h.volumeChange": "VOL CHG 4h",
+  "tf4h.volumeChange": "VOL CHG 4H",
   "tf8h.volumeChange": "VOL CHG 8H",
   "tf12h.volumeChange": "VOL CHG 12H",
   "tf1d.volumeChange": "VOL CHG 1D",
@@ -521,26 +494,22 @@ const FORMATTERS = {
 
 const CELL_STYLERS = {
   change: (val) => {
-    if (!val || isNaN(val)) return "";
-    return val > 0 ? "green" : val < 0 ? "red" : "";
+    if (val === 0 || val == null || isNaN(val)) return "gray";
+    return val > 0 ? "green" : "red";
   },
 
   correlation: (val) => {
-    if (val > 0.8) return "text-yellow";
-    return "";
+    if (val === 0 || val == null || isNaN(val)) return "gray";
+    return val > 0.8 ? "text-yellow" : "";
   },
 
   muted: () => "gray"
 };
 
 const FIELD_STYLE_MAP = {
-  "tf5m.changePercent": CELL_STYLERS.change,
 
   // Core
-  price: formatUSD,
-  openInterestUsd: formatUSDShort,
   fundingRate: CELL_STYLERS.change,
-  mcap: formatUSDShort,
 
   // Change %
   "tf5m.changePercent": CELL_STYLERS.change,
@@ -696,7 +665,7 @@ const LABELS_TOOLTIP = {
   "VOL CHG 5M": "Volume change vs previous preiod",
   "VOL CHG 15M": "Volume change vs previous preiod",
   "VOL CHG 1H": "Volume change vs previous preiod",
-  "VOL CHG 4h": "Volume change vs previous preiod",
+  "VOL CHG 4H": "Volume change vs previous preiod",
   "VOL CHG 8H": "Volume change vs previous preiod",
   "VOL CHG 12H": "Volume change vs previous preiod",
   "VOL CHG 1D": "Volume change vs previous preiod",
@@ -739,33 +708,52 @@ function resetAllSortIcons() {
 let BINANCE_DATA = [];
 let HYPERLIQUID_DATA = [];
 
-Promise.all([
-  fetch("/Apps/Screener/Data/Binance.json").then(r => r.json()),
-  fetch("/Apps/Screener/Data/Hyperliquid.json").then(r => r.json()),
-  fetch("/Apps/Screener/Data/Icon.json").then(r => r.json())
-]).then(([binance, hyperliquid, icons]) => {
-  BINANCE_DATA = binance.tickers || [];
-  HYPERLIQUID_DATA = hyperliquid.tickers || [];
-  ICON_MAP = icons;
+async function fetchData() {
+  try {
+    const [binanceRes, hyperliquidRes, iconRes] = await Promise.all([
+      fetch("http://localhost:3000/api/screener/binance"),
+      fetch("http://localhost:3000/api/screener/hyperliquid"),
+      fetch("http://localhost:3000/api/screener/icon")
+    ]);
 
-  CURRENT_TICKERS = [...BINANCE_DATA];
+    const binanceData = await binanceRes.json();
+    const hyperliquidData = await hyperliquidRes.json();
+    const iconData = await iconRes.json();
+
+    BINANCE_DATA = binanceData.tickers || [];
+    HYPERLIQUID_DATA = hyperliquidData.tickers || [];
+    ICON_MAP = iconData;
+
+    const activeSource = document.querySelector('.btn-radio.source-data.active span')?.innerText;
+    if (activeSource === "Hyperliquid") {
+      CURRENT_TICKERS = [...HYPERLIQUID_DATA];
+    } else {
+      CURRENT_TICKERS = [...BINANCE_DATA];
+    }
+
+    refreshTable();
+  } catch (err) {
+    console.error("Fetch error:", err);
+  }
+}
+
+fetchData().then(() => {
   buildHeader();
-  refreshTable(); 
   initDrag();
 });
+
+setInterval(fetchData, 1500);
 
 /* ───────── Header Data ───────── */
 function buildHeader() {
   thead.innerHTML = "";
   const trHead = document.createElement("tr");
 
-  // === COIN HEADER (INDEX 0) ===
   const thCoin = document.createElement("th");
   thCoin.setAttribute("data-col-index", 1);
   thCoin.textContent = "PAIRS";
   trHead.appendChild(thCoin);
 
-  // === DATA HEADERS ===
   getActiveFields().forEach((field, i) => {
     const th = document.createElement("th");
     const colIndex = i + 2;
@@ -855,8 +843,7 @@ function buildHeader() {
       const tooltip = document.createElement("div");
       tooltip.className = "th-tooltip";
       tooltip.textContent = tooltipText;
-
-      wrapper.appendChild(label);
+      
       wrapper.appendChild(tooltip);
     } else {
       wrapper.appendChild(label);
@@ -1066,7 +1053,7 @@ function moveColumn(from, to) {
   });
 }
 
-// ───────── ON OFF RENDER DATA ───────── //
+// ───────── ON OFF RENDER ───────── //
 const COLUMN_CONFIG_KEY = "column_visibility_v1";
 
 const DEFAULT_COLUMN_CONFIG = {
@@ -1075,7 +1062,7 @@ const DEFAULT_COLUMN_CONFIG = {
   "fundingRate": true,
   "mcap": true,
 
-  // ===== Change % =====
+  // Change %
   "tf5m.changePercent": true,
   "tf15m.changePercent": true,
   "tf1h.changePercent": true,
@@ -1084,7 +1071,7 @@ const DEFAULT_COLUMN_CONFIG = {
   "tf12h.changePercent": true,
   "tf1d.changePercent": true,
 
-  // ===== Change $ =====
+  // Change $
   "tf5m.changeDollar": true,
   "tf15m.changeDollar": true,
   "tf1h.changeDollar": true,
@@ -1093,7 +1080,7 @@ const DEFAULT_COLUMN_CONFIG = {
   "tf12h.changeDollar": true,
   "tf1d.changeDollar": true,
 
-  // ===== Volume =====
+  // Volume
   "tf5m.volume": true,
   "tf15m.volume": true,
   "tf1h.volume": true,
@@ -1102,7 +1089,7 @@ const DEFAULT_COLUMN_CONFIG = {
   "tf12h.volume": true,
   "tf1d.volume": true,
 
-  // ===== Trades =====
+  // Trades
   "tf5m.trades": true,
   "tf15m.trades": true,
   "tf1h.trades": true,
@@ -1111,7 +1098,7 @@ const DEFAULT_COLUMN_CONFIG = {
   "tf12h.trades": true,
   "tf1d.trades": true,
 
-  // ===== Volatility =====
+  // Volatility
   "tf5m.volatility": true,
   "tf15m.volatility": true,
   "tf1h.volatility": true,
@@ -1120,7 +1107,7 @@ const DEFAULT_COLUMN_CONFIG = {
   "tf12h.volatility": true,
   "tf1d.volatility": true,
 
-  // ===== OI Change % =====
+  // OI Change %
   "tf5m.oiChange": true,
   "tf15m.oiChange": true,
   "tf1h.oiChange": true,
@@ -1129,7 +1116,7 @@ const DEFAULT_COLUMN_CONFIG = {
   "tf12h.oiChange": true,
   "tf1d.oiChange": true,
 
-  // ===== OI Change $ =====
+  // OI Change $
   "tf5m.oiChangeDollar": true,
   "tf15m.oiChangeDollar": true,
   "tf1h.oiChangeDollar": true,
@@ -1138,7 +1125,7 @@ const DEFAULT_COLUMN_CONFIG = {
   "tf12h.oiChangeDollar": true,
   "tf1d.oiChangeDollar": true,
 
-  // ===== CVD =====
+  // CVD
   "tf5m.vdelta": true,
   "tf15m.vdelta": true,
   "tf1h.vdelta": true,
@@ -1147,7 +1134,7 @@ const DEFAULT_COLUMN_CONFIG = {
   "tf12h.vdelta": true,
   "tf1d.vdelta": true,
 
-  // ===== Volume Change % =====
+  // Volume Change %
   "tf5m.volumeChange": true,
   "tf15m.volumeChange": true,
   "tf1h.volumeChange": true,
@@ -1156,7 +1143,7 @@ const DEFAULT_COLUMN_CONFIG = {
   "tf12h.volumeChange": true,
   "tf1d.volumeChange": true,
 
-  // ===== Volume Change $ =====
+  // Volume Change $
   "tf5m.volumeChangeDollar": true,
   "tf15m.volumeChangeDollar": true,
   "tf1h.volumeChangeDollar": true,
@@ -1165,7 +1152,7 @@ const DEFAULT_COLUMN_CONFIG = {
   "tf12h.volumeChangeDollar": true,
   "tf1d.volumeChangeDollar": true,
 
-  // ===== BTC Corr =====
+  // BTC
   "tf5m.btcCorrelation": true,
   "tf15m.btcCorrelation": true,
   "tf1h.btcCorrelation": true,
@@ -1276,17 +1263,14 @@ function setFieldsActive(activeFields) {
   });
 }
 
-// ALL
 btnAll.addEventListener("click", () => {
   setFieldsActive(FIELDS);
 });
 
-// Defaults
 btnDefaults.addEventListener("click", () => {
   setFieldsActive(DEFAULT_FIELDS);
 });
 
-// Core Only
 btnCoreOnly.addEventListener("click", () => {
   setFieldsActive(CORE_FIELDS);
 });
@@ -1570,14 +1554,12 @@ document.addEventListener("DOMContentLoaded", () => {
     togglePopup(btnColumn, popupColumn, btnFilter, popupFilter);
   });
 
-  // Klik di dalam popup → jangan tutup
   [popupFilter, popupColumn].forEach((popup) => {
     popup.addEventListener("click", (e) => {
       e.stopPropagation();
     });
   });
 
-  // Tombol X → tutup semua
   closeButtons.forEach((btn) => {
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
@@ -1588,7 +1570,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Klik di luar → tutup semua
   document.addEventListener("click", () => {
     popupFilter.classList.remove("show");
     popupColumn.classList.remove("show");
@@ -1613,13 +1594,6 @@ document.addEventListener("click", (e) => {
 
 // ───────── Dropdown ───────── //
 function initDropdown(triggerEl, panelEl, wrapperEl) {
-  // Fungsi untuk reset ke placeholder
-  const resetToPlaceholder = () => {
-    const triggerText = triggerEl.querySelector('.trigger-text');
-    triggerText.textContent = 'Select...';
-    triggerEl.dataset.selectedValue = '';
-  };
-
   triggerEl.addEventListener('click', e => {
     e.stopPropagation();
     const isOpen = panelEl.classList.contains('open');

@@ -911,7 +911,7 @@ input[type="number"] {
   position: absolute;
   top: 100%;
   left: 50%;
-  transform: translate(-50%, 20px);
+  transform: translate(-50%, 8px);
 
   background: var(--bg-25);
   color: var(--white);
