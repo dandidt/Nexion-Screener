@@ -48,6 +48,24 @@ const formatUSD = (val) => {
   return `${sign}$${formatted}`;
 };
 
+const formatUSDClear = (val) => {
+  if (val == null || isNaN(val)) return "-";
+
+  const abs = Math.abs(val);
+  let decimals = 2;
+
+  if (abs !== 0 && abs < 1) {
+    decimals = Math.min(10, Math.ceil(Math.abs(Math.log10(abs))) + 2);
+  }
+
+  const formatted = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }).format(abs);
+
+  return `$${formatted}`;
+};
+
 const formatUSDShort = (val) => {
   if (val == null || isNaN(val)) return "-";
 
@@ -396,10 +414,10 @@ const FIELD_LABELS = {
 
 const FORMATTERS = {
   // Core
-  price: formatUSD,
-  openInterestUsd: formatUSDShort,
+  price: formatUSDClear,
+  openInterestUsd: formatUSDShortClear,
   fundingRate: formatPercentFunding,
-  mcap: formatUSDShort,
+  mcap: formatUSDShortClear,
 
   // Change %
   "tf5m.changePercent": formatPercent,

@@ -839,7 +839,18 @@ input[type="number"] {
   min-width: 120px;
   border-bottom: 1px solid var(--bg-25);
   border-right: 1px solid var(--bg-25);
+  cursor: pointer;
 }
+
+.crypto-table th:hover,
+.crypto-table td:hover {
+  background: var(--bg-20);
+}
+
+.crypto-table tr:hover td {
+  background: var(--bg-20);
+}
+
 
 /* === FILTER ICON STATES === */
 .arrow-filter {
