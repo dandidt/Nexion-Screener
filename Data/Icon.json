@@ -456,7 +456,6 @@
   "SCR": "https://coin-images.coingecko.com/coins/images/50571/large/scroll.jpg?1728376125",
   "SCRT": "https://coin-images.coingecko.com/coins/images/11871/large/scrt_200.png?1733344413",
   "SEI": "https://coin-images.coingecko.com/coins/images/28205/large/Sei_Logo_-_Transparent.png",
-  "SENT": "https://coin-images.coingecko.com/coins/images/55176/large/sent-icon.png",
   "SFP": "https://coin-images.coingecko.com/coins/images/13905/large/sfp.png",
   "SHELL": "https://coin-images.coingecko.com/coins/images/54374/large/myshell.jpg?1739428226",
   "SHIB": "https://coin-images.coingecko.com/coins/images/11939/large/shiba.png",
@@ -589,5 +588,8 @@
   "ZORA": "https://coin-images.coingecko.com/coins/images/54693/large/zora.jpg?1741094751",
   "ZRC": "https://coin-images.coingecko.com/coins/images/35960/large/zircuit_token_icon_2.png?1732502352",
   "ZRO": "https://coin-images.coingecko.com/coins/images/28206/large/ftxG9_TJ_400x400.jpeg?1696527208",
-  "ZRX": "https://coin-images.coingecko.com/coins/images/863/large/0x.png"
+  "ZRX": "https://coin-images.coingecko.com/coins/images/863/large/0x.png",
+
+  "BROCCOLIF3B": "https://s2.coinmarketcap.com/static/img/coins/64x64/35749.png",
+  "SENT": "https://s2.coinmarketcap.com/static/img/coins/64x64/38868.png"
 }

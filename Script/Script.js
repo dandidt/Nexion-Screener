@@ -1,29 +1,130 @@
 // ───────── Format ───────── //
 const formatNumber = (val) => {
   if (val == null || isNaN(val)) return "-";
-  return new Intl.NumberFormat('en-US', {
+
+  const abs = Math.abs(val);
+  const formatted = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
-  }).format(val);
+  }).format(abs);
+
+  const sign = val > 0 ? "+" : val < 0 ? "-" : "";
+
+  return `${sign}${formatted}`;
+};
+
+const formatNumberShort = (val) => {
+  if (val == null || isNaN(val)) return "-";
+
+  const abs = Math.abs(val);
+  
+  const formatted = new Intl.NumberFormat('en-US', {
+    notation: 'compact',
+    maximumFractionDigits: 2
+  }).format(abs);
+
+  const sign = val < 0 ? "-" : "";
+
+  return `${sign}${formatted}`;
 };
 
 const formatUSD = (val) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(val);
+  if (val == null || isNaN(val)) return "-";
+
+  const abs = Math.abs(val);
+  let decimals = 2;
+
+  if (abs !== 0 && abs < 1) {
+    decimals = Math.min(10, Math.ceil(Math.abs(Math.log10(abs))) + 2);
+  }
+
+  const formatted = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }).format(abs);
+
+  const sign = val > 0 ? "+" : val < 0 ? "-" : "";
+  
+  return `${sign}$${formatted}`;
 };
 
 const formatUSDShort = (val) => {
-  return new Intl.NumberFormat('en-US', {
+  if (val == null || isNaN(val)) return "-";
+
+  const abs = Math.abs(val);
+  
+  const formatted = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     notation: 'compact',
     maximumFractionDigits: 2
-  }).format(val);
+  }).format(abs);
+
+  const sign = val > 0 ? "+" : val < 0 ? "-" : "";
+
+  return `${sign}${formatted}`;
+};
+
+const formatUSDShortClear = (val) => {
+  if (val == null || isNaN(val)) return "-";
+
+  const abs = Math.abs(val);
+  
+  const formatted = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    notation: 'compact',
+    maximumFractionDigits: 2
+  }).format(abs);
+
+  const sign = val < 0 ? "-" : "";
+
+  return `${sign}${formatted}`;
 };
 
 const formatPercent = (val) => {
+  if (val == null || isNaN(val)) return "-";
+
+  const percent = val; 
+  const abs = Math.abs(percent);
+
+  let decimals = 2;
+
+  if (abs !== 0 && abs < 1) {
+    decimals = Math.min(
+      6,
+      Math.ceil(Math.abs(Math.log10(abs))) + 1
+    );
+  }
+
+  const formattedValue = percent.toFixed(decimals);
+  
+  const sign = percent > 0 ? "+" : "";
+
+  return `${sign}${formattedValue}%`;
+};
+
+const formatPercentClear = (val) => {
+  if (val == null || isNaN(val)) return "-";
+
+  const percent = val; 
+  const abs = Math.abs(percent);
+
+  let decimals = 2;
+
+  if (abs !== 0 && abs < 1) {
+    decimals = Math.min(
+      6,
+      Math.ceil(Math.abs(Math.log10(abs))) + 1
+    );
+  }
+
+  const formattedValue = percent.toFixed(decimals);
+
+  return `${formattedValue}%`;
+};
+
+const formatPercentFunding = (val) => {
   if (val == null || isNaN(val)) return "-";
 
   const percent = val * 100;
@@ -38,8 +139,37 @@ const formatPercent = (val) => {
     );
   }
 
-  return `${percent.toFixed(decimals)}%`;
+  const formattedValue = percent.toFixed(decimals);
+  
+  const sign = percent > 0 ? "+" : percent < 0 ? "" : "";
+
+  return `${sign}${formattedValue}%`;
 };
+
+// ───────── Button Swap Source Data ───────── //
+const radioButtons = document.querySelectorAll('.btn-radio.source-data');
+
+radioButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    document.querySelector('.btn-radio.source-data.active')?.classList.remove('active');
+    button.classList.add('active');
+
+    const sourceName = button.querySelector('span').innerText;
+    document.title = `Nexion | ${sourceName}`;
+
+    if (sourceName === "Binance") {
+      CURRENT_TICKERS = [...BINANCE_DATA];
+    } else if (sourceName === "Hyperliquid") {
+      CURRENT_TICKERS = [...HYPERLIQUID_DATA];
+    }
+
+    refreshTable();
+
+    resetAllSortIcons();
+    activeSortCol = null;
+    for (let key in sortStates) delete sortStates[key];
+  });
+});
 
 const table = document.querySelector(".crypto-table");
 const thead = table.querySelector("thead");
@@ -49,6 +179,7 @@ let dragColIndex = null;
 const sortStates = {};
 let activeSortCol = null;
 let CURRENT_TICKERS = [];
+let activeFilters = [];
 
 const FIELDS = [
   // ===== Core =====
@@ -210,21 +341,21 @@ const FIELD_LABELS = {
   "tf1d.volatility": "VLT 1D",
 
   // OI
-  "tf5m.oiChange": "OI CHG % 5M",
-  "tf15m.oiChange": "OI CHG % 15M",
-  "tf1h.oiChange": "OI CHG % 1H",
-  "tf4h.oiChange": "OI CHG % 4H",
-  "tf8h.oiChange": "OI CHG % 8H",
-  "tf12h.oiChange": "OI CHG % 12H",
-  "tf1d.oiChange": "OI CHG % 1D",
+  "tf5m.oiChange": "OI CHG 5M %",
+  "tf15m.oiChange": "OI CHG 15M %",
+  "tf1h.oiChange": "OI CHG 1H %",
+  "tf4h.oiChange": "OI CHG 4H %",
+  "tf8h.oiChange": "OI CHG 8H %",
+  "tf12h.oiChange": "OI CHG 12H %",
+  "tf1d.oiChange": "OI CHG 1D %",
 
-  "tf5m.oiChangeDollar": "OI CHG $ 5M",
-  "tf15m.oiChangeDollar": "OI CHG $ 15M",
-  "tf1h.oiChangeDollar": "OI CHG $ 1H",
-  "tf4h.oiChangeDollar": "OI CHG $ 4H",
-  "tf8h.oiChangeDollar": "OI CHG $ 8H",
-  "tf12h.oiChangeDollar": "OI CHG $ 12H",
-  "tf1d.oiChangeDollar": "OI CHG $ 1D",
+  "tf5m.oiChangeDollar": "OI CHG 5M $",
+  "tf15m.oiChangeDollar": "OI CHG 15M $",
+  "tf1h.oiChangeDollar": "OI CHG 1H $",
+  "tf4h.oiChangeDollar": "OI CHG 4H $",
+  "tf8h.oiChangeDollar": "OI CHG 8H $",
+  "tf12h.oiChangeDollar": "OI CHG 12H $",
+  "tf1d.oiChangeDollar": "OI CHG 1D $",
 
   // CVD
   "tf5m.vdelta": "CVD 5M",
@@ -245,13 +376,13 @@ const FIELD_LABELS = {
   "tf1d.volumeChange": "VOL CHG 1D",
 
   // VOL CHG $
-  "tf5m.volumeChangeDollar": "VOL CHG $ 5M",
-  "tf15m.volumeChangeDollar": "VOL CHG $ 15M",
-  "tf1h.volumeChangeDollar": "VOL CHG $ 1H",
-  "tf4h.volumeChangeDollar": "VOL CHG $ 4H",
-  "tf8h.volumeChangeDollar": "VOL CHG $ 8H",
-  "tf12h.volumeChangeDollar": "VOL CHG $ 12H",
-  "tf1d.volumeChangeDollar": "VOL CHG $ 1D",
+  "tf5m.volumeChangeDollar": "VOL CHG 5M $",
+  "tf15m.volumeChangeDollar": "VOL CHG 15M $",
+  "tf1h.volumeChangeDollar": "VOL CHG 1H $",
+  "tf4h.volumeChangeDollar": "VOL CHG 4H $",
+  "tf8h.volumeChangeDollar": "VOL CHG 8H $",
+  "tf12h.volumeChangeDollar": "VOL CHG 12H $",
+  "tf1d.volumeChangeDollar": "VOL CHG 1D $",
 
   // BTC Corr
   "tf5m.btcCorrelation": "COR 5M",
@@ -267,7 +398,7 @@ const FORMATTERS = {
   // Core
   price: formatUSD,
   openInterestUsd: formatUSDShort,
-  fundingRate: formatPercent,
+  fundingRate: formatPercentFunding,
   mcap: formatUSDShort,
 
   // Change %
@@ -289,31 +420,31 @@ const FORMATTERS = {
   "tf1d.changeDollar": formatUSD,
 
   // Volume
-  "tf5m.volume": formatUSDShort,
-  "tf15m.volume": formatUSDShort,
-  "tf1h.volume": formatUSDShort,
-  "tf4h.volume": formatUSDShort,
-  "tf8h.volume": formatUSDShort,
-  "tf12h.volume": formatUSDShort,
-  "tf1d.volume": formatUSDShort,
+  "tf5m.volume": formatUSDShortClear,
+  "tf15m.volume": formatUSDShortClear,
+  "tf1h.volume": formatUSDShortClear,
+  "tf4h.volume": formatUSDShortClear,
+  "tf8h.volume": formatUSDShortClear,
+  "tf12h.volume": formatUSDShortClear,
+  "tf1d.volume": formatUSDShortClear,
 
   // Trades
-  "tf5m.trades": formatNumber,
-  "tf15m.trades": formatNumber,
-  "tf1h.trades": formatNumber,
-  "tf4h.trades": formatNumber,
-  "tf8h.trades": formatNumber,
-  "tf12h.trades": formatNumber,
-  "tf1d.trades": formatNumber,
+  "tf5m.trades": formatNumberShort,
+  "tf15m.trades": formatNumberShort,
+  "tf1h.trades": formatNumberShort,
+  "tf4h.trades": formatNumberShort,
+  "tf8h.trades": formatNumberShort,
+  "tf12h.trades": formatNumberShort,
+  "tf1d.trades": formatNumberShort,
 
   // Volatility
-  "tf5m.volatility": formatPercent,
-  "tf15m.volatility": formatPercent,
-  "tf1h.volatility": formatPercent,
-  "tf4h.volatility": formatPercent,
-  "tf8h.volatility": formatPercent,
-  "tf12h.volatility": formatPercent,
-  "tf1d.volatility": formatPercent,
+  "tf5m.volatility": formatPercentClear,
+  "tf15m.volatility": formatPercentClear,
+  "tf1h.volatility": formatPercentClear,
+  "tf4h.volatility": formatPercentClear,
+  "tf8h.volatility": formatPercentClear,
+  "tf12h.volatility": formatPercentClear,
+  "tf1d.volatility": formatPercentClear,
 
   // OI CHG %
   "tf5m.oiChange": formatPercent,
@@ -370,6 +501,136 @@ const FORMATTERS = {
   "tf1d.btcCorrelation": formatNumber,
 };
 
+const CELL_STYLERS = {
+  change: (val) => {
+    if (!val || isNaN(val)) return "";
+    return val > 0 ? "green" : val < 0 ? "red" : "";
+  },
+
+  correlation: (val) => {
+    if (val > 0.8) return "text-yellow";
+    return "";
+  },
+
+  muted: () => "gray"
+};
+
+const FIELD_STYLE_MAP = {
+  "tf5m.changePercent": CELL_STYLERS.change,
+
+  // Core
+  price: formatUSD,
+  openInterestUsd: formatUSDShort,
+  fundingRate: CELL_STYLERS.change,
+  mcap: formatUSDShort,
+
+  // Change %
+  "tf5m.changePercent": CELL_STYLERS.change,
+  "tf15m.changePercent": CELL_STYLERS.change,
+  "tf1h.changePercent": CELL_STYLERS.change,
+  "tf4h.changePercent": CELL_STYLERS.change,
+  "tf8h.changePercent": CELL_STYLERS.change,
+  "tf12h.changePercent": CELL_STYLERS.change,
+  "tf1d.changePercent": CELL_STYLERS.change,
+
+  // Change $
+  "tf5m.changeDollar": CELL_STYLERS.change,
+  "tf15m.changeDollar": CELL_STYLERS.change,
+  "tf1h.changeDollar": CELL_STYLERS.change,
+  "tf4h.changeDollar": CELL_STYLERS.change,
+  "tf8h.changeDollar": CELL_STYLERS.change,
+  "tf12h.changeDollar": CELL_STYLERS.change,
+  "tf1d.changeDollar": CELL_STYLERS.change,
+
+  // OI CHG %
+  "tf5m.oiChange": CELL_STYLERS.change,
+  "tf15m.oiChange": CELL_STYLERS.change,
+  "tf1h.oiChange": CELL_STYLERS.change,
+  "tf4h.oiChange": CELL_STYLERS.change,
+  "tf8h.oiChange": CELL_STYLERS.change,
+  "tf12h.oiChange": CELL_STYLERS.change,
+  "tf1d.oiChange": CELL_STYLERS.change,
+
+  // OI CHG $
+  "tf5m.oiChangeDollar": CELL_STYLERS.change,
+  "tf15m.oiChangeDollar": CELL_STYLERS.change,
+  "tf1h.oiChangeDollar": CELL_STYLERS.change,
+  "tf4h.oiChangeDollar": CELL_STYLERS.change,
+  "tf8h.oiChangeDollar": CELL_STYLERS.change,
+  "tf12h.oiChangeDollar": CELL_STYLERS.change,
+  "tf1d.oiChangeDollar": CELL_STYLERS.change,
+
+  // CVD
+  "tf5m.vdelta": CELL_STYLERS.change,
+  "tf15m.vdelta": CELL_STYLERS.change,
+  "tf1h.vdelta": CELL_STYLERS.change,
+  "tf4h.vdelta": CELL_STYLERS.change,
+  "tf8h.vdelta": CELL_STYLERS.change,
+  "tf12h.vdelta": CELL_STYLERS.change,
+  "tf1d.vdelta": CELL_STYLERS.change,
+
+  // VOL CHG %
+  "tf5m.volumeChange": CELL_STYLERS.change,
+  "tf15m.volumeChange": CELL_STYLERS.change,
+  "tf1h.volumeChange": CELL_STYLERS.change,
+  "tf4h.volumeChange": CELL_STYLERS.change,
+  "tf8h.volumeChange": CELL_STYLERS.change,
+  "tf12h.volumeChange": CELL_STYLERS.change,
+  "tf1d.volumeChange": CELL_STYLERS.change,
+
+  // VOL CHG $
+  "tf5m.volumeChangeDollar": CELL_STYLERS.change,
+  "tf15m.volumeChangeDollar": CELL_STYLERS.change,
+  "tf1h.volumeChangeDollar": CELL_STYLERS.change,
+  "tf4h.volumeChangeDollar": CELL_STYLERS.change,
+  "tf8h.volumeChangeDollar": CELL_STYLERS.change,
+  "tf12h.volumeChangeDollar": CELL_STYLERS.change,
+  "tf1d.volumeChangeDollar": CELL_STYLERS.change,
+
+  // BTC Corr
+  "tf5m.btcCorrelation": CELL_STYLERS.change,
+  "tf15m.btcCorrelation":CELL_STYLERS.change,
+  "tf1h.btcCorrelation": CELL_STYLERS.change,
+  "tf4h.btcCorrelation": CELL_STYLERS.change,
+  "tf8h.btcCorrelation": CELL_STYLERS.change,
+  "tf12h.btcCorrelation": CELL_STYLERS.change,
+  "tf1d.btcCorrelation": CELL_STYLERS.change,
+};
+
+// ───────── Preset Filter Definitions ─────────
+const PRESET_FILTERS = {
+  "FilterHV": {
+    id: "high_volume",
+    field: "tf1h.volume",
+    op: ">",
+    value: 10_000_000 // 10 juta USD
+  },
+  "FilterOS": {
+    id: "oi_spike",
+    field: "tf1h.oiChange",
+    op: ">",
+    value: 5 // 5%
+  },
+  "FilterBM": {
+    id: "big_movers",
+    field: "tf1h.changePercent",
+    op: ">",
+    value: 3 // 3%
+  },
+  "FilterHF": {
+    id: "high_funding",
+    field: "fundingRate",
+    op: "|x| >",
+    value: 0.05 // 0.05% → pastikan data funding dalam desimal (0.0005 = 0.05%)
+  }
+};
+
+// ───────── Reverse Mapping: Label UI → Field Path ─────────
+const LABEL_TO_FIELD = {};
+for (const [field, label] of Object.entries(FIELD_LABELS)) {
+  LABEL_TO_FIELD[label] = field;
+}
+
 let ICON_MAP = {};
 
 /* ───────── Reset Icon Short ───────── */
@@ -386,19 +647,25 @@ function resetAllSortIcons() {
 }
 
 /* ───────── FETCH JSON ───────── */
+let BINANCE_DATA = [];
+let HYPERLIQUID_DATA = [];
+
 Promise.all([
   fetch("/Apps/Screener/Data/Binance.json").then(r => r.json()),
+  fetch("/Apps/Screener/Data/Hyperliquid.json").then(r => r.json()),
   fetch("/Apps/Screener/Data/Icon.json").then(r => r.json())
-]).then(([binance, icons]) => {
+]).then(([binance, hyperliquid, icons]) => {
+  BINANCE_DATA = binance.tickers || [];
+  HYPERLIQUID_DATA = hyperliquid.tickers || [];
   ICON_MAP = icons;
-  CURRENT_TICKERS = binance.tickers;
 
+  CURRENT_TICKERS = [...BINANCE_DATA];
   buildHeader();
-  buildBody(CURRENT_TICKERS);
+  refreshTable(); 
   initDrag();
 });
 
-/* ───────── BUILD HEADER ───────── */
+/* ───────── Header Data ───────── */
 function buildHeader() {
   thead.innerHTML = "";
   const trHead = document.createElement("tr");
@@ -406,7 +673,7 @@ function buildHeader() {
   // === COIN HEADER (INDEX 0) ===
   const thCoin = document.createElement("th");
   thCoin.setAttribute("data-col-index", 1);
-  thCoin.textContent = "Pairs";
+  thCoin.textContent = "PAIRS";
   trHead.appendChild(thCoin);
 
   // === DATA HEADERS ===
@@ -438,6 +705,7 @@ function buildHeader() {
     label.style.flexGrow = "1";
     label.style.textAlign = "center";
     label.style.padding = "0 10px";
+    label.style.color = "var(--gray)";
 
     // sort icon
     const filterIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -512,53 +780,82 @@ function handleIconError(img, pair) {
 function buildBody(tickers) {
   tbody.innerHTML = "";
 
+  if (!Array.isArray(tickers) || tickers.length === 0) {
+    const tr = document.createElement("tr");
+    const td = document.createElement("td");
+    td.colSpan = getActiveFields().length + 1;
+    td.textContent = "No data available";
+    td.style.textAlign = "center";
+    td.style.padding = "20px";
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    return;
+  }
+
   tickers.forEach(ticker => {
     const tr = document.createElement("tr");
 
-    // COIN COLUMN
-    const tdCoin = document.createElement("td");
-    const pair = ticker.baseAsset;
-    const symbol = ticker.symbol;
-    const icon = ICON_MAP[pair] || "";
+    tr.appendChild(renderCoinCell(ticker));
 
-    let iconHtml = "";
-
-    if (icon) {
-      iconHtml = `<img class="icon-pairs" src="${icon}" onerror="handleIconError(this, '${pair}')" />`;
-    } else {
-      iconHtml = `
-        <div class="icon-pairs-retrun">
-          <span class="named-icon-pairs-retrun">${pair.charAt(0)}</span>
-        </div>`;
-    }
-
-    tdCoin.innerHTML = `
-      <div class="coin-cell">
-        ${iconHtml}
-        <span>${symbol}</span>
-      </div>
-    `;
-    tr.appendChild(tdCoin);
-
-    // DATA COLUMNS
     getActiveFields().forEach(field => {
       const td = document.createElement("td");
-      
-      const raw = getDeepValue(ticker, field); 
-      
+      const raw = getDeepValue(ticker, field);
       const formatter = FORMATTERS[field];
 
       td.textContent = formatter ? formatter(raw) : (raw ?? "-");
       td.dataset.rawValue = raw;
+
+      const styler = FIELD_STYLE_MAP[field];
+      if (styler) {
+        const styleClass = styler(raw);
+        if (styleClass) td.classList.add(styleClass);
+      }
 
       tr.appendChild(td);
     });
 
     tbody.appendChild(tr);
   });
+}
 
-  originalRows.length = 0;
-  originalRows.push(...Array.from(tbody.rows));
+function renderCoinCell(ticker) {
+  const td = document.createElement("td");
+  
+  const pair = ticker.baseAsset;
+  const icon = ICON_MAP[pair] || "";
+
+  let displayName = pair;
+  if (ticker.quoteCurrency) {
+    displayName = `${pair}-${ticker.quoteCurrency}`;
+  }
+  
+  if (!ticker.quoteCurrency && ticker.symbol) { 
+    displayName = ticker.symbol;
+  }
+
+  let iconKey = pair;
+  if (!ICON_MAP[pair] && pair.includes(':')) {
+    const withoutPrefix = pair.split(':')[1];
+    if (ICON_MAP[withoutPrefix]) {
+      iconKey = withoutPrefix;
+    }
+  }
+
+  const iconSrc = ICON_MAP[iconKey] || "";
+  const iconHtml = iconSrc 
+    ? `<img class="icon-pairs" src="${iconSrc}" onerror="handleIconError(this, '${displayName}')" />`
+    : `<div class="icon-pairs-retrun"><span class="named-icon-pairs-retrun">${displayName.charAt(0)}</span></div>`;
+
+  td.innerHTML = `
+    <div class="coin-cell">
+      ${iconHtml}
+      <span>${displayName}</span>
+    </div>
+  `;
+  
+  td.dataset.originalPair = pair;
+  
+  return td;
 }
 
 const originalRows = [];
@@ -585,9 +882,11 @@ function sortTableByColumn(colIndex, direction) {
       return direction === "asc" ? rawA - rawB : rawB - rawA;
     }
 
+    const textA = cellA.textContent.trim();
+    const textB = cellB.textContent.trim();
     return direction === "asc"
-      ? A.localeCompare(B)
-      : B.localeCompare(A);
+      ? textA.localeCompare(textB, undefined, { numeric: true })
+      : textB.localeCompare(textA, undefined, { numeric: true });
   });
 
   tbody.innerHTML = "";
@@ -859,7 +1158,7 @@ function setFieldsActive(activeFields) {
 
   // rebuild table langsung
   buildHeader();
-  buildBody(CURRENT_TICKERS);
+  refreshTable();
   initDrag();
 
   // update btn-column style per section
@@ -886,6 +1185,160 @@ btnDefaults.addEventListener("click", () => {
 // Core Only
 btnCoreOnly.addEventListener("click", () => {
   setFieldsActive(CORE_FIELDS);
+});
+
+// ───────── Filter ───────── //
+const filterWrapper = document.querySelector('.wrapper-filter');
+const trigger1 = filterWrapper.querySelector('#dropdownWrapper1 .trigger-text');
+const trigger2 = filterWrapper.querySelector('#dropdownWrapper2 .trigger-text');
+const valueInput = filterWrapper.querySelector('input[type="number"]');
+const addFilterBtn = document.getElementById('AddFilters');
+const clearFilterBtn = document.getElementById('ClearFilter');
+
+function applyFilters(tickers) {
+  if (activeFilters.length === 0) return tickers;
+
+  return tickers.filter(ticker => {
+    return activeFilters.every(filter => {
+      const rawValue = getDeepValue(ticker, filter.field);
+      if (rawValue == null || rawValue === '' || rawValue === '-') return false;
+
+      const num = parseFloat(rawValue);
+      if (isNaN(num)) return false;
+
+      const threshold = parseFloat(filter.value);
+      if (isNaN(threshold)) return false;
+
+      const op = filter.op;
+
+      switch (op) {
+        case '>': return num > threshold;
+        case '>=': return num >= threshold;
+        case '<': return num < threshold;
+        case '<=': return num <= threshold;
+        case '=': return Math.abs(num - threshold) < 1e-9;
+        case '|x| >': return Math.abs(num) > threshold;
+        // Note: "Between" butuh 2 nilai → skip dulu atau tambah nanti
+        default: return true;
+      }
+    });
+  });
+}
+
+addFilterBtn.addEventListener('click', () => {
+  const label1 = trigger1.textContent.trim();
+  const operator = trigger2.textContent.trim();
+  const inputValue = valueInput.value.trim();
+
+  // Validasi
+  if (!label1 || !operator || !inputValue) {
+    alert("Please select a field, operator, and enter a value.");
+    return;
+  }
+
+  const field = LABEL_TO_FIELD[label1];
+  if (!field) {
+    console.warn("Unknown field label:", label1);
+    return;
+  }
+
+  const numValue = parseFloat(inputValue);
+  if (isNaN(numValue)) {
+    alert("Please enter a valid number.");
+    return;
+  }
+
+  // Tambah filter
+  activeFilters.push({
+    field,
+    op: operator,
+    value: numValue
+  });
+
+  // Terapkan ke tabel
+  refreshTable();
+
+  // Reset input biar user bisa tambah lagi
+  valueInput.value = '';
+});
+
+clearFilterBtn.addEventListener('click', () => {
+  activeFilters = [];
+  valueInput.value = '';
+  refreshTable();
+});
+
+// Ambil semua tombol shortcut
+document.querySelectorAll('.btn-filter').forEach(btn => {
+  const presetKey = btn.id;
+  const preset = PRESET_FILTERS[presetKey];
+
+  if (!preset) return;
+
+  btn.addEventListener('click', () => {
+    const existingIndex = activeFilters.findIndex(f => f.id === preset.id);
+
+    if (existingIndex !== -1) {
+      // Hapus filter
+      activeFilters.splice(existingIndex, 1);
+      btn.classList.remove('active'); // opsional: visual feedback
+    } else {
+      // Tambah filter + simpan ID
+      activeFilters.push({
+        id: preset.id,
+        field: preset.field,
+        op: preset.op,
+        value: preset.value
+      });
+      btn.classList.add('active'); // opsional
+    }
+
+    // Terapkan filter & render ulang
+    refreshTable(); 
+  });
+});
+
+// ───────── Search ───────── //
+// ───────── Unified Table Refresh ─────────
+function refreshTable() {
+  let data = [...CURRENT_TICKERS];
+
+  // Terapkan filter aktif (manual + preset)
+  data = applyFilters(data);
+
+  // Terapkan search
+  data = filterBySearch(data, currentSearchTerm);
+
+  // Render
+  buildBody(data);
+}
+
+const searchInput = document.querySelector('.box-search input[type="text"]');
+let currentSearchTerm = '';
+
+function filterBySearch(tickers, term) {
+  if (!term.trim()) return tickers;
+
+  const lowerTerm = term.toLowerCase();
+
+  return tickers.filter(ticker => {
+    let displayName = '';
+
+    if (ticker.quoteCurrency) {
+      displayName = `${ticker.baseAsset}-${ticker.quoteCurrency}`;
+    } else if (ticker.symbol) {
+      displayName = ticker.symbol;
+    } else {
+      displayName = ticker.baseAsset || '';
+    }
+
+    return displayName.toLowerCase().includes(lowerTerm);
+  });
+}
+
+searchInput.addEventListener('input', (e) => {
+  currentSearchTerm = e.target.value;
+  refreshTable();
 });
 
 // ───────── Popup ───────── //
@@ -1008,52 +1461,52 @@ document.addEventListener('click', e => {
 });
 
 // ───────── Network ───────── //
-const latencyEl = document.querySelector('.latency');
-const rowConnect = document.querySelector('.row-connect');
-const textConnect = document.querySelector('.text-connect');
-const circle = document.querySelector('.circle-connect');
+// const latencyEl = document.querySelector('.latency');
+// const rowConnect = document.querySelector('.row-connect');
+// const textConnect = document.querySelector('.text-connect');
+// const circle = document.querySelector('.circle-connect');
 
-function setNetworkStatus(status, latency = null) {
-  latencyEl.className = 'latency';
-  rowConnect.className = 'row-connect';
-  textConnect.className = 'text-connect';
-  circle.className = 'circle-connect';
+// function setNetworkStatus(status, latency = null) {
+//   latencyEl.className = 'latency';
+//   rowConnect.className = 'row-connect';
+//   textConnect.className = 'text-connect';
+//   circle.className = 'circle-connect';
 
-  if (latency !== null) latencyEl.textContent = `${latency}ms`;
+//   if (latency !== null) latencyEl.textContent = `${latency}ms`;
 
-  latencyEl.classList.add(status);
-  rowConnect.classList.add(`bg-${status}`);
-  textConnect.classList.add(status);
-  circle.classList.add(status);
+//   latencyEl.classList.add(status);
+//   rowConnect.classList.add(`bg-${status}`);
+//   textConnect.classList.add(status);
+//   circle.classList.add(status);
 
-  if (status === 'green') textConnect.textContent = 'Connected';
-  if (status === 'yellow') textConnect.textContent = 'Connected Slow';
-  if (status === 'red') textConnect.textContent = 'Disconnected';
-  if (status === 'gray') textConnect.textContent = 'Idle';
-}
+//   if (status === 'green') textConnect.textContent = 'Connected';
+//   if (status === 'yellow') textConnect.textContent = 'Connected Slow';
+//   if (status === 'red') textConnect.textContent = 'Disconnected';
+//   if (status === 'gray') textConnect.textContent = 'Idle';
+// }
 
-setNetworkStatus('gray');
+// setNetworkStatus('gray');
 
-async function checkLatency() {
-  const start = performance.now();
-  try {
-    await fetch('https://1.1.1.1/cdn-cgi/trace', {
-      cache: 'no-store',
-      mode: 'no-cors'
-    });
+// async function checkLatency() {
+//   const start = performance.now();
+//   try {
+//     await fetch('https://1.1.1.1/cdn-cgi/trace', {
+//       cache: 'no-store',
+//       mode: 'no-cors'
+//     });
 
-    const ms = Math.round(performance.now() - start);
+//     const ms = Math.round(performance.now() - start);
 
-    if (ms < 80) setNetworkStatus('green', ms);
-    else if (ms < 200) setNetworkStatus('yellow', ms);
-    else setNetworkStatus('red', ms);
-  } catch {
-    setNetworkStatus('red');
-  }
-}
+//     if (ms < 80) setNetworkStatus('green', ms);
+//     else if (ms < 200) setNetworkStatus('yellow', ms);
+//     else setNetworkStatus('red', ms);
+//   } catch {
+//     setNetworkStatus('red');
+//   }
+// }
 
-setInterval(checkLatency, 5000);
-checkLatency();
+// setInterval(checkLatency, 5000);
+// checkLatency();
 
 // ───────── Realtime Price ───────── //
 // let solPrice = 0;
