@@ -615,6 +615,111 @@ const FIELD_STYLE_MAP = {
   "tf1d.btcCorrelation": CELL_STYLERS.change,
 };
 
+/* ───────── Tooltip Header ───────── */
+const LABELS_TOOLTIP = {
+  "OI $": "Total value of all open positions",
+  "FUNDING": "Periodic rate paid between longs and shorts",
+  "MCAP": "Market Capitalization",
+
+  // Change %
+  "CHG 5M %": "Price change as percentage",
+  "CHG 15M %": "Price change as percentage",
+  "CHG 1H %": "Price change as percentage",
+  "CHG 4H %": "Price change as percentage",
+  "CHG 8H %": "Price change as percentage",
+  "CHG 12H %": "Price change as percentage",
+  "CHG 1D %": "Price change as percentage",
+
+  // Change $
+  "CHG 5M $": "Price change in USD",
+  "CHG 15M $": "Price change in USD",
+  "CHG 1H $": "Price change in USD",
+  "CHG 4H $": "Price change in USD",
+  "CHG 8H $": "Price change in USD",
+  "CHG 12H $": "Price change in USD",
+  "CHG 1D $": "Price change in USD",
+
+  // Volume
+  "VOL 5M": "Trading volume in USD",
+  "VOL 15M": "Trading volume in USD",
+  "VOL 1H": "Trading volume in USD",
+  "VOL 4H": "Trading volume in USD",
+  "VOL 8H": "Trading volume in USD",
+  "VOL 12H": "Trading volume in USD",
+  "VOL 1D": "Trading volume in USD",
+
+  // Trades
+  "TRD 5M": "Number of executed trades",
+  "TRD 15M": "Number of executed trades",
+  "TRD 1H": "Number of executed trades",
+  "TRD 4H": "Number of executed trades",
+  "TRD 8H": "Number of executed trades",
+  "TRD 12H": "Number of executed trades",
+  "TRD 1D": "Number of executed trades",
+
+  // Volatility
+  "VLT 5M": "Price range as % of average price",
+  "VLT 15M": "Price range as % of average price",
+  "VLT 1H": "Price range as % of average price",
+  "VLT 4H": "Price range as % of average price",
+  "VLT 8H": "Price range as % of average price",
+  "VLT 12H": "Price range as % of average price",
+  "VLT 1D": "Price range as % of average price",
+
+  // OI
+  "OI CHG 5M %": "Change in open interest as percentage",
+  "OI CHG 15M %": "Change in open interest as percentage",
+  "OI CHG 1H %": "Change in open interest as percentage",
+  "OI CHG 4H %": "Change in open interest as percentage",
+  "OI CHG 8H %": "Change in open interest as percentage",
+  "OI CHG 12H %": "Change in open interest as percentage",
+  "OI CHG 1D %": "Change in open interest as percentage",
+
+  "OI CHG 5M $": "Change in open interest in USD",
+  "OI CHG 15M $": "Change in open interest in USD",
+  "OI CHG 1H $": "Change in open interest in USD",
+  "OI CHG 4H $": "Change in open interest in USD",
+  "OI CHG 8H $": "Change in open interest in USD",
+  "OI CHG 12H $": "Change in open interest in USD",
+  "OI CHG 1D $": "Change in open interest in USD",
+
+  // CVD
+  "CVD 5M": "Cumulative volume delta (buy minus sell pressure)",
+  "CVD 15M": "Cumulative volume delta (buy minus sell pressure)",
+  "CVD 1H": "Cumulative volume delta (buy minus sell pressure)",
+  "CVD 4H": "Cumulative volume delta (buy minus sell pressure)",
+  "CVD 8H": "Cumulative volume delta (buy minus sell pressure)",
+  "CVD 12H": "Cumulative volume delta (buy minus sell pressure)",
+  "CVD 1D": "Cumulative volume delta (buy minus sell pressure)",
+
+  // VOL CHG
+  "VOL CHG 5M": "Volume change vs previous preiod",
+  "VOL CHG 15M": "Volume change vs previous preiod",
+  "VOL CHG 1H": "Volume change vs previous preiod",
+  "VOL CHG 4h": "Volume change vs previous preiod",
+  "VOL CHG 8H": "Volume change vs previous preiod",
+  "VOL CHG 12H": "Volume change vs previous preiod",
+  "VOL CHG 1D": "Volume change vs previous preiod",
+
+  // VOL CHG $
+  "VOL CHG 5M $": "Volume change USD vs previous preiod",
+  "VOL CHG 15M $": "Volume change USD vs previous preiod",
+  "VOL CHG 1H $": "Volume change USD vs previous preiod",
+  "VOL CHG 4H $": "Volume change USD vs previous preiod",
+  "VOL CHG 8H $": "Volume change USD vs previous preiod",
+  "VOL CHG 12H $": "Volume change USD vs previous preiod",
+  "VOL CHG 1D $": "Volume change USD vs previous preiod",
+
+  // BTC Corr
+  "COR 5M": "Price correlation with BTC",
+  "COR 15M": "Price correlation with BTC",
+  "COR 1H": "Price correlation with BTC",
+  "COR 4H": "Price correlation with BTC",
+  "COR 8H": "Price correlation with BTC",
+  "COR 12H": "Price correlation with BTC",
+  "COR 1D": "Price correlation with BTC",
+};
+
 let ICON_MAP = {};
 
 /* ───────── Reset Icon Short ───────── */
@@ -690,6 +795,7 @@ function buildHeader() {
     label.style.textAlign = "center";
     label.style.padding = "0 10px";
     label.style.color = "var(--gray)";
+    label.style.cursor = "pointer";
 
     // sort icon
     const filterIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -739,6 +845,23 @@ function buildHeader() {
 
     wrapper.appendChild(dragHandle);
     wrapper.appendChild(label);
+
+    const labelText = label.textContent;
+    const tooltipText = LABELS_TOOLTIP[labelText];
+
+    label.classList.add("th-label");
+
+    if (tooltipText) {
+      const tooltip = document.createElement("div");
+      tooltip.className = "th-tooltip";
+      tooltip.textContent = tooltipText;
+
+      wrapper.appendChild(label);
+      wrapper.appendChild(tooltip);
+    } else {
+      wrapper.appendChild(label);
+    }
+
     wrapper.appendChild(filterIcon);
     th.appendChild(wrapper);
     trHead.appendChild(th);
@@ -1473,6 +1596,20 @@ document.addEventListener("DOMContentLoaded", () => {
     btnColumn.classList.remove("active");
   });
 });
+
+// ───────── Chekbox Div ───────── //
+document.addEventListener("click", (e) => {
+  const box = e.target.closest(".box-column");
+  if (!box) return;
+
+  const checkbox = box.querySelector(".ui-checkbox");
+  if (!checkbox) return;
+
+  if (e.target !== checkbox) {
+    checkbox.checked = !checkbox.checked;
+    checkbox.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+}, true);
 
 // ───────── Dropdown ───────── //
 function initDropdown(triggerEl, panelEl, wrapperEl) {

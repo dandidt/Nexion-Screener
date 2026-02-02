@@ -285,18 +285,14 @@ a {
 }
 
 /* Chekbox Global */
+.box-column:hover .ui-checkbox {
+  border-color: var(--green);
+}
+
 .ui-checkbox {
   --checkbox-diameter: 15px;
   --checkbox-border-radius: 4px;
   --checkmark-size: 1.2;
-}
-
-.ui-checkbox, 
-.ui-checkbox *, 
-.ui-checkbox *::before, 
-.ui-checkbox *::after {
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
 }
 
 .ui-checkbox {
@@ -840,6 +836,7 @@ input[type="number"] {
   border-bottom: 1px solid var(--bg-25);
   border-right: 1px solid var(--bg-25);
   cursor: pointer;
+  pointer-events: none;
 }
 
 .crypto-table th:hover,
@@ -850,7 +847,6 @@ input[type="number"] {
 .crypto-table tr:hover td {
   background: var(--bg-20);
 }
-
 
 /* === FILTER ICON STATES === */
 .arrow-filter {
@@ -900,6 +896,34 @@ input[type="number"] {
 
 .wrapper-table::-webkit-scrollbar-corner {
   background: var(--color-baground-green);
+}
+
+/* Tooltip Header */
+.th-wrapper {
+  position: relative;
+}
+
+.th-label:hover + .th-tooltip {
+  opacity: 1;
+}
+
+.th-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translate(-50%, 20px);
+
+  background: var(--bg-25);
+  color: var(--white);
+  border: 1px solid var(--bg-45);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: var(--sz-10);
+  white-space: nowrap;
+
+  opacity: 0;
+  pointer-events: none;
+  z-index: 999;
 }
 
 /* Content Tabel */
@@ -1120,6 +1144,7 @@ input[type="number"] {
   border-radius: 6px;
   background: var(--bg-27);
   padding: 6px 10px;
+  cursor: pointer;
 }
 
 .box-column span {
