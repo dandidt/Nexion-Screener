@@ -154,6 +154,7 @@ radioButtons.forEach(button => {
     const sourceName = button.querySelector('span').innerText;
     document.title = `Nexion | ${sourceName}`;
 
+    fetchActiveSource();
     refreshTable();
 
     resetAllSortIcons();
@@ -707,27 +708,41 @@ function resetAllSortIcons() {
 /* ───────── FETCH JSON ───────── */
 let BINANCE_DATA = [];
 let HYPERLIQUID_DATA = [];
+let ICONS_LOADED = false;
+let fetchIntervalId = null;
 
-async function fetchData() {
+function getActiveSourceName() {
+  return document.querySelector('.btn-radio.source-data.active span')?.innerText || "Binance";
+}
+
+async function fetchIconsOnce() {
+  if (ICONS_LOADED) return;
   try {
-    const [binanceRes, hyperliquidRes, iconRes] = await Promise.all([
-      fetch("http://localhost:3000/api/screener/binance"),
-      fetch("http://localhost:3000/api/screener/hyperliquid"),
-      fetch("http://localhost:3000/api/screener/icon")
-    ]);
+    const iconRes = await fetch("https://screener.orionterminal.com/api/icons");
+    ICON_MAP = await iconRes.json();
+    ICONS_LOADED = true;
+  } catch (err) {
+    console.error("Icon fetch error:", err);
+  }
+}
 
-    const binanceData = await binanceRes.json();
-    const hyperliquidData = await hyperliquidRes.json();
-    const iconData = await iconRes.json();
+async function fetchActiveSource() {
+  try {
+    const activeSource = getActiveSourceName();
+    const url =
+      activeSource === "Hyperliquid"
+        ? "https://screener.orionterminal.com/api/screener?exchange=hl"
+        : "https://screener.orionterminal.com/api/screener";
 
-    BINANCE_DATA = binanceData.tickers || [];
-    HYPERLIQUID_DATA = hyperliquidData.tickers || [];
-    ICON_MAP = iconData;
+    const res = await fetch(url);
+    const data = await res.json();
+    const tickers = data.tickers || [];
 
-    const activeSource = document.querySelector('.btn-radio.source-data.active span')?.innerText;
     if (activeSource === "Hyperliquid") {
+      HYPERLIQUID_DATA = tickers;
       CURRENT_TICKERS = [...HYPERLIQUID_DATA];
     } else {
+      BINANCE_DATA = tickers;
       CURRENT_TICKERS = [...BINANCE_DATA];
     }
 
@@ -737,12 +752,58 @@ async function fetchData() {
   }
 }
 
-fetchData().then(() => {
-  buildHeader();
-  initDrag();
+async function fetchInitialData() {
+  try {
+    const [binanceRes, hyperliquidRes, iconRes] = await Promise.all([
+      fetch("https://screener.orionterminal.com/api/screener"),
+      fetch("https://screener.orionterminal.com/api/screener?exchange=hl"),
+      fetch("https://screener.orionterminal.com/api/icons")
+    ]);
+
+    const binanceData = await binanceRes.json();
+    const hyperliquidData = await hyperliquidRes.json();
+    const iconData = await iconRes.json();
+
+    BINANCE_DATA = binanceData.tickers || [];
+    HYPERLIQUID_DATA = hyperliquidData.tickers || [];
+    ICON_MAP = iconData;
+    ICONS_LOADED = true;
+
+    const activeSource = getActiveSourceName();
+    CURRENT_TICKERS =
+      activeSource === "Hyperliquid" ? [...HYPERLIQUID_DATA] : [...BINANCE_DATA];
+
+    refreshTable();
+  } catch (err) {
+    console.error("Fetch error:", err);
+  }
+}
+
+function startFetchLoop() {
+  if (fetchIntervalId) return;
+  fetchActiveSource();
+  fetchIntervalId = setInterval(fetchActiveSource, 5000);
+}
+
+function stopFetchLoop() {
+  if (!fetchIntervalId) return;
+  clearInterval(fetchIntervalId);
+  fetchIntervalId = null;
+}
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    stopFetchLoop();
+  } else {
+    startFetchLoop();
+  }
 });
 
-setInterval(fetchData, 1500);
+fetchInitialData().then(() => {
+  buildHeader();
+  initDrag();
+  startFetchLoop();
+});
 
 /* ───────── Header Data ───────── */
 function buildHeader() {
@@ -870,9 +931,14 @@ function handleIconError(img, pair) {
   img.replaceWith(fallback);
 }
 
-/* ───────── Body Data ───────── */
+window.handleIconError = handleIconError;
+/* ───────── Build Body: Init ROW_MAP ───────── */
 function buildBody(tickers) {
   tbody.innerHTML = "";
+  ROW_MAP.clear();
+  originalRows.length = 0;
+  ROW_ORDER.length = 0;
+  ROW_ORDER_SET.clear();
 
   if (!Array.isArray(tickers) || tickers.length === 0) {
     const tr = document.createElement("tr");
@@ -883,22 +949,20 @@ function buildBody(tickers) {
     td.style.padding = "20px";
     tr.appendChild(td);
     tbody.appendChild(tr);
-    originalRows.length = 0; 
+    PREVIOUS_TICKERS = [];
+    ROW_ORDER.length = 0;
+    ROW_ORDER_SET.clear();
     return;
   }
 
-  originalRows.length = 0; 
-
   tickers.forEach(ticker => {
     const tr = document.createElement("tr");
-
     tr.appendChild(renderCoinCell(ticker));
 
     getActiveFields().forEach(field => {
       const td = document.createElement("td");
       const raw = getDeepValue(ticker, field);
       const formatter = FORMATTERS[field];
-
       td.textContent = formatter ? formatter(raw) : (raw ?? "-");
       td.dataset.rawValue = raw;
 
@@ -907,13 +971,22 @@ function buildBody(tickers) {
         const styleClass = styler(raw);
         if (styleClass) td.classList.add(styleClass);
       }
-
       tr.appendChild(td);
     });
 
     tbody.appendChild(tr);
     originalRows.push(tr);
+    
+    // Init ROW_MAP
+    const key = getTickerKey(ticker);
+    ROW_MAP.set(key, tr);
+    if (key && !ROW_ORDER_SET.has(key)) {
+      ROW_ORDER.push(key);
+      ROW_ORDER_SET.add(key);
+    }
   });
+
+  PREVIOUS_TICKERS = [...tickers];
 }
 
 function renderCoinCell(ticker) {
@@ -957,6 +1030,114 @@ function renderCoinCell(ticker) {
 }
 
 const originalRows = [];
+
+/* ───────── STATE UNTUK INCREMENTAL UPDATE ───────── */
+let PREVIOUS_TICKERS = [];
+let ROW_MAP = new Map();
+let ROW_ORDER = [];
+let ROW_ORDER_SET = new Set();
+
+/* ───────── Helper: Get Unique Key ───────── */
+function getTickerKey(ticker) {
+  if (ticker?.symbol) return ticker.symbol;
+  if (ticker?.baseAsset && ticker?.quoteCurrency) {
+    return `${ticker.baseAsset}-${ticker.quoteCurrency}`;
+  }
+  return ticker?.baseAsset || JSON.stringify(ticker);
+}
+
+/* ───────── Body Data: UPDATE INCREMENTAL (FIXED) ───────── */
+function updateTableIncremental(newTickers) {
+  if (!Array.isArray(newTickers)) {
+    newTickers = [];
+  }
+
+  const newRowCount = newTickers.length;
+  const oldRowCount = PREVIOUS_TICKERS.length;
+
+  const newMap = new Map();
+  newTickers.forEach((ticker, idx) => {
+    const key = getTickerKey(ticker);
+    if (!key) return;
+    newMap.set(key, { ticker, index: idx });
+    if (!ROW_ORDER_SET.has(key)) {
+      ROW_ORDER.push(key);
+      ROW_ORDER_SET.add(key);
+    }
+  });
+
+  newTickers.forEach((newItem, newIndex) => {
+    const key = getTickerKey(newItem);
+    const oldItem = PREVIOUS_TICKERS.find(t => getTickerKey(t) === key);
+    
+    let row = ROW_MAP.get(key);
+    
+    if (!row) {
+      row = document.createElement("tr");
+      row.appendChild(renderCoinCell(newItem));
+      
+      getActiveFields().forEach(() => {
+        const td = document.createElement("td");
+        row.appendChild(td);
+      });
+      
+      tbody.appendChild(row);
+      ROW_MAP.set(key, row);
+    }
+
+    const coinCell = row.cells[0];
+    if (!oldItem || oldItem.baseAsset !== newItem.baseAsset || 
+        oldItem.quoteCurrency !== newItem.quoteCurrency ||
+        oldItem.symbol !== newItem.symbol) {
+      
+      const newCoinCell = renderCoinCell(newItem);
+      row.replaceChild(newCoinCell, coinCell);
+    }
+
+    getActiveFields().forEach((field, colIndex) => {
+      const td = row.cells[colIndex + 1];
+      if (!td) return;
+
+      const newValue = getDeepValue(newItem, field);
+      const oldValue = oldItem ? getDeepValue(oldItem, field) : undefined;
+      
+      if (newValue !== oldValue || !oldItem) {
+        const formatter = FORMATTERS[field];
+        const displayValue = formatter ? formatter(newValue) : (newValue ?? "-");
+        
+        td.textContent = displayValue;
+        td.dataset.rawValue = newValue;
+        
+        td.className = '';
+        const styler = FIELD_STYLE_MAP[field];
+        if (styler) {
+          const styleClass = styler(newValue);
+          if (styleClass) td.classList.add(styleClass);
+        }
+        
+        td.classList.add('cell-updated');
+        setTimeout(() => td.classList.remove('cell-updated'), 200);
+      }
+    });
+  });
+
+  ROW_MAP.forEach((row, key) => {
+    if (!newMap.has(key) && row.parentElement === tbody) {
+      tbody.removeChild(row);
+      ROW_MAP.delete(key);
+    }
+  });
+
+  const fragment = document.createDocumentFragment();
+  ROW_ORDER.forEach(key => {
+    if (!newMap.has(key)) return;
+    const row = ROW_MAP.get(key);
+    if (row) fragment.appendChild(row);
+  });
+  tbody.appendChild(fragment);
+
+  PREVIOUS_TICKERS = [...newTickers];
+}
 
 /* ───────── Short ───────── */
 function sortTableByColumn(colIndex, direction) {
@@ -1179,6 +1360,13 @@ function getActiveFields() {
   return FIELDS.filter(f => COLUMN_CONFIG[f] !== false);
 }
 
+function handleColumnConfigChange() {
+  buildHeader();
+  PREVIOUS_TICKERS = [];
+  refreshTable();
+  initDrag();
+}
+
 document.querySelectorAll("input[type='checkbox'][data-field]").forEach(cb => {
   const field = cb.dataset.field;
 
@@ -1187,10 +1375,7 @@ document.querySelectorAll("input[type='checkbox'][data-field]").forEach(cb => {
   cb.addEventListener("change", () => {
     COLUMN_CONFIG[field] = cb.checked;
     saveColumnConfig(COLUMN_CONFIG);
-
-    buildHeader();
-    buildBody(CURRENT_TICKERS);
-    initDrag();
+    handleColumnConfigChange();
   });
 });
 
@@ -1217,10 +1402,7 @@ document.querySelectorAll(".btn-column").forEach(btn => {
     }
 
     saveColumnConfig(COLUMN_CONFIG);
-
-    buildHeader();
-    buildBody(CURRENT_TICKERS);
-    initDrag();
+    handleColumnConfigChange();
   });
 
   const allCheckedInit = Array.from(checkboxes).every(cb => cb.checked);
@@ -1249,9 +1431,7 @@ function setFieldsActive(activeFields) {
 
   saveColumnConfig(COLUMN_CONFIG);
 
-  buildHeader();
-  refreshTable();
-  initDrag();
+  handleColumnConfigChange();
 
   document.querySelectorAll(".wrapper-core, .wrapper-column").forEach(wrapper => {
     const sectionCheckboxes = wrapper.querySelectorAll('input[type="checkbox"][data-field]');
@@ -1480,12 +1660,22 @@ document.querySelectorAll('.btn-filter').forEach(btn => {
 // ───────── Search ───────── //
 function refreshTable() {
   let data = [...CURRENT_TICKERS];
-
+  
   data = applyFilters(data);
-
   data = filterBySearch(data, currentSearchTerm);
 
-  buildBody(data);
+  // Reset sort state
+  if (activeSortCol) {
+    resetAllSortIcons();
+    activeSortCol = null;
+  }
+
+  // Render
+  if (PREVIOUS_TICKERS.length === 0 || data.length === 0) {
+    buildBody(data);
+  } else {
+    updateTableIncremental(data);
+  }
 }
 
 const searchInput = document.querySelector('.box-search input[type="text"]');
