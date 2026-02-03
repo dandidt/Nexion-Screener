@@ -711,6 +711,13 @@ let HYPERLIQUID_DATA = [];
 let ICONS_LOADED = false;
 let fetchIntervalId = null;
 
+const PROXY = "https://screener.dandidiantoro22.workers.dev/?url=";
+
+function proxy(url) {
+  return PROXY + encodeURIComponent(url);
+}
+
+
 function getActiveSourceName() {
   return document.querySelector('.btn-radio.source-data.active span')?.innerText || "Binance";
 }
@@ -718,7 +725,7 @@ function getActiveSourceName() {
 async function fetchIconsOnce() {
   if (ICONS_LOADED) return;
   try {
-    const iconRes = await fetch("https://screener.orionterminal.com/api/icons");
+    const iconRes = await fetch(proxy("https://screener.orionterminal.com/api/icons"));
     ICON_MAP = await iconRes.json();
     ICONS_LOADED = true;
   } catch (err) {
@@ -731,8 +738,8 @@ async function fetchActiveSource() {
     const activeSource = getActiveSourceName();
     const url =
       activeSource === "Hyperliquid"
-        ? "https://screener.orionterminal.com/api/screener?exchange=hl"
-        : "https://screener.orionterminal.com/api/screener";
+        ? proxy("https://screener.orionterminal.com/api/screener?exchange=hl")
+        : proxy("https://screener.orionterminal.com/api/screener");
 
     const res = await fetch(url);
     const data = await res.json();
@@ -755,9 +762,9 @@ async function fetchActiveSource() {
 async function fetchInitialData() {
   try {
     const [binanceRes, hyperliquidRes, iconRes] = await Promise.all([
-      fetch("https://screener.orionterminal.com/api/screener"),
-      fetch("https://screener.orionterminal.com/api/screener?exchange=hl"),
-      fetch("https://screener.orionterminal.com/api/icons")
+      fetch(proxy("https://screener.orionterminal.com/api/screener")),
+      fetch(proxy("https://screener.orionterminal.com/api/screener?exchange=hl")),
+      fetch(proxy("https://screener.orionterminal.com/api/icons"))
     ]);
 
     const binanceData = await binanceRes.json();
